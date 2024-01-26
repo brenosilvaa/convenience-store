@@ -8,10 +8,6 @@ public class OrderValidator : AbstractValidator<Order>
 {
     public OrderValidator()
     {
-        RuleFor(order => order.Data)
-            .NotEmpty()
-            .WithMessage("O campo Data deve ser preenchido.");
-        
         RuleFor(order => order.SellerId)
             .NotEmpty()
             .GreaterThan(0)
