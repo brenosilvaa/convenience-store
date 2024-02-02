@@ -1,6 +1,7 @@
 using ConvenienceStore.Features.Kardexs.Models;
 using ConvenienceStore.Features.Pixes.ValueObjects;
 using ConvenienceStore.Features.Users.Models;
+using ConvenienceStore.Features.OrderItems.Models;
 
 namespace ConvenienceStore.Features.Products.Models;
 
@@ -15,7 +16,7 @@ public class Product(string name, decimal value, Guid userId)
     public Guid UserId { get; private set; } = userId;
     public User User { get; private set; }
     public string Image { get; private set; }
-    //public IList<PedidoItem> Itens { get; private set; } = [];
+    public IList<OrderItem> Items { get; private set; } = [];
     public IList<Kardex> Kardex { get; private set; } = [];
     #endregion
 
