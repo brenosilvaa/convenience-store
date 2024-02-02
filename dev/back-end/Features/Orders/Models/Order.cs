@@ -1,3 +1,4 @@
+using ConvenienceStore.Features.OrderItems.Models;
 using ConvenienceStore.Features.Users.Models;
 
 namespace ConvenienceStore.Features.Orders.Models;
@@ -15,7 +16,7 @@ public class Order
 
     public string? Observation { get; private set; }
 
-    //public IList<PedidoItem> Itens { get; private set; }
+    public IList<OrderItem> Items { get; private set; }
     public decimal TotalValue { get; private set; }
     public bool IsCanceled { get; private set; }
 
