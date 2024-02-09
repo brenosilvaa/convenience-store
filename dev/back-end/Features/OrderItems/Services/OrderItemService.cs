@@ -14,7 +14,7 @@ public class OrderItemService(IMapper mapper, OrderItemValidator orderItemValida
     private async Task<OrderItem> _FindAsync(Guid id)
     {
         var orderItem = await repo.FindAsync(id);
-        return orderItem ?? throw new NotFoundException("Order item n„o encontrado.");
+        return orderItem ?? throw new NotFoundException("Order item n√£o encontrado.");
     }
 
     public async Task<IList<OrderItemVM>> ListAsync()

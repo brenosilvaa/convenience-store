@@ -1,6 +1,7 @@
 using ConvenienceStore.Features.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using ConvenienceStore.Features.OrderItems.Models;
+using ConvenienceStore.Features.Orders.Models;
 
 namespace ConvenienceStore.Infra.Context;
 
@@ -16,6 +17,7 @@ public class DataContext : DbContext
 
     public DbSet<User> Users { get; private set; }
     public DbSet<OrderItem> OrderItems { get; private set; }
+    public DbSet<Order> Orders { get; private set; }
 
     #endregion
 }
