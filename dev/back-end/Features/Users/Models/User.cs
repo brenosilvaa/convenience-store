@@ -1,3 +1,4 @@
+using ConvenienceStore.Features.Orders.Models;
 using ConvenienceStore.Features.Pixes.ValueObjects;
 using ConvenienceStore.Features.Products.Models;
 
@@ -16,6 +17,8 @@ public class User(string name, string email, string password)
     public Pix? Pix { get; private set; }
     public bool IsSeller { get; private set; }
     public IList<Product> Products { get; private set; } = [];
+    public IList<Order> SaleOrders { get; private set; } = [];
+    public IList<Order> ShoppingOrders { get; private set; } = [];
 
     #endregion
 

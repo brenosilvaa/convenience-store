@@ -1,5 +1,7 @@
 using ConvenienceStore.Features.OrderItems.Models;
 
+using FluentValidation;
+
 namespace ConvenienceStore.Features.OrderItems.Validators;
 
 public class OrderItemValidator : AbstractValidator<OrderItem>

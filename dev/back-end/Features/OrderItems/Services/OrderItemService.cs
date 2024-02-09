@@ -14,8 +14,8 @@ public class OrderItemService(OrderItemValidator orderItemValidator)
         {
             await orderItemValidator.ValidateAndThrowAsync(orderItem);
 
-            repo.Add(orderItem);
-            await repo.Commit();
+            //repo.Add(orderItem);
+            //await repo.Commit();
 
             return orderItem;
         }

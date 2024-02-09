@@ -19,7 +19,7 @@ public class OrderItem
 
     #region Constructors
 
-    public Order(long orderId, long productId, int quantity)
+    public OrderItem(long orderId, long productId, int quantity)
     {
         Update(orderId, productId, quantity);
     }
