@@ -9,9 +9,9 @@ public class OrderItem
 
     public Guid Id { get; private set; }
     public long OrderId { get; private set; }
-    public Order Order { get; private set; }
+    public Order? Order { get; private set; }
     public long ProductId { get; private set; }
-    public Product Product { get; private set; }
+    public Product? Product { get; private set; }
     public int Quantity { get; private set; }
     public decimal TotalValue { get; private set; }
     public decimal UnitaryValue { get; private set; }
@@ -19,26 +19,29 @@ public class OrderItem
 
     #region Constructors
 
-    public Order(long orderId, long productId, int quantity)
+    public OrderItem(long orderId, long productId, int quantity, decimal unitaryValue)
     {
-        Update(orderId, productId, quantity);
+        Update(orderId, productId, quantity, unitaryValue);
     }
 
     #endregion
 
     #region Methods
 
-    public void Update(long orderId, long productId, int quantity)
+    public void Update(long orderId, long productId, int quantity, decimal unitaryValue)
     {
         OrderId = orderId;
         ProductId = productId;
         Quantity = quantity;
+        UnitaryValue = unitaryValue;
+        
+        CalculateTotal();
     }
 
-    public void CalculateTotal() => TotalValue = Quantity * UnitaryValue;
+    private void CalculateTotal() => TotalValue = Quantity * UnitaryValue;
 
     public override string ToString()
-        => $"Id: {Id} | Total Pedido: {TotalValue} | Quantidade: {Quantity} | Produto: {Product.Name} | Valor Unit·rio: {UnitaryValue}";
+        => $"Id: {Id} | Total Pedido: {TotalValue} | Quantidade: {Quantity} | Produto: {ProductId} | Valor Unit√°rio: {UnitaryValue}";
 
     #endregion
 }

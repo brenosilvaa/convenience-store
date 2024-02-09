@@ -1,12 +1,11 @@
 using ConvenienceStore.Features.OrderItems.Models;
+using ConvenienceStore.Features.OrderItems.Repos;
 using ConvenienceStore.Features.OrderItems.Validators;
-using ConvenienceStore.Features.Users.Models;
-using ConvenienceStore.Features.Users.Validators;
 using FluentValidation;
 
 namespace ConvenienceStore.Features.OrderItems.Services;
 
-public class OrderItemService(OrderItemValidator orderItemValidator)
+public class OrderItemService(OrderItemValidator orderItemValidator, OrderItemRepo repo)
 {
     public async Task<OrderItem> AddAsync(OrderItem orderItem)
     {
