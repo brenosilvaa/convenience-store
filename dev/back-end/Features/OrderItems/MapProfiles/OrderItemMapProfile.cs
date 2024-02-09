@@ -1,6 +1,6 @@
 using AutoMapper;
-using ConvenienceStore.Features.Users.Models;
-using ConvenienceStore.Features.Users.ViewModels;
+using ConvenienceStore.Features.OrderItems.Models;
+using ConvenienceStore.Features.OrderItems.ViewModels;
 
 namespace ConvenienceStore.Features.Users.MapProfiles;
 

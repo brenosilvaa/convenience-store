@@ -1,9 +1,6 @@
-﻿using ConvenienceStore.Features.Orders.Models;
-using ConvenienceStore.Features.Products.Models;
-
-namespace ConvenienceStore.Features.OrderItems.ViewModels
+﻿namespace ConvenienceStore.Features.OrderItems.ViewModels
 {
-    public class OrderItemVm
+    public class OrderItemVM
     {
         public Guid Id { get; set; }
         public long OrderId { get; set; }

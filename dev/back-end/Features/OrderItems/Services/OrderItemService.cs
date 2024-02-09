@@ -1,7 +1,6 @@
+using AutoMapper;
 using ConvenienceStore.Features.OrderItems.Models;
 using ConvenienceStore.Features.OrderItems.Repos;
-using ConvenienceStore.Features.OrderItems.Validators;
-using ConvenienceStore.Features.OrderItems.Models;
 using ConvenienceStore.Features.OrderItems.Validators;
 using ConvenienceStore.Features.OrderItems.ViewModels;
 using ConvenienceStore.Shared.Exceptions;
@@ -38,7 +37,7 @@ public class OrderItemService(IMapper mapper, OrderItemValidator orderItemValida
         return mapper.Map<OrderItemVM>(orderItem);
     }
 
-    public async Task<OrderItemVM> UpdateAsync(Guid id, CreeateOrderItemVM vm)
+    public async Task<OrderItemVM> UpdateAsync(Guid id, CreateOrderItemVM vm)
     {
         var orderItem = await _FindAsync(id);
 
