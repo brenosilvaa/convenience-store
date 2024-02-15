@@ -1,9 +1,10 @@
 using ConvenienceStore.Features.OrderItems.Models;
 using ConvenienceStore.Features.Users.Models;
+using ConvenienceStore.Shared.Contracts;
 
 namespace ConvenienceStore.Features.Orders.Models;
 
-public class Order
+public class Order : IBaseModel
 {
     #region Properties
 

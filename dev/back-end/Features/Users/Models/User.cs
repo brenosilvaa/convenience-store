@@ -1,10 +1,11 @@
 using ConvenienceStore.Features.Orders.Models;
 using ConvenienceStore.Features.Pixes.ValueObjects;
 using ConvenienceStore.Features.Products.Models;
+using ConvenienceStore.Shared.Contracts;
 
 namespace ConvenienceStore.Features.Users.Models;
 
-public class User(string name, string email, string password)
+public class User(string name, string email, string password) : IBaseModel
 {
     #region Properties
 

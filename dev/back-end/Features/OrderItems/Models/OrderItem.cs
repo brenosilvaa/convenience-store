@@ -1,9 +1,11 @@
 using ConvenienceStore.Features.Products.Models;
 using ConvenienceStore.Features.Orders.Models;
 using ConvenienceStore.Features.Users.Models;
+using ConvenienceStore.Shared.Contracts;
+
 namespace ConvenienceStore.Features.OrderItems.Models;
 
-public class OrderItem
+public class OrderItem : IBaseModel
 {
     #region Properties
 
@@ -15,6 +17,7 @@ public class OrderItem
     public int Quantity { get; private set; }
     public decimal TotalValue { get; private set; }
     public decimal UnitaryValue { get; private set; }
+
     #endregion
 
     #region Constructors
@@ -34,14 +37,15 @@ public class OrderItem
         ProductId = productId;
         Quantity = quantity;
         UnitaryValue = unitaryValue;
-        
+
         CalculateTotal();
     }
 
     private void CalculateTotal() => TotalValue = Quantity * UnitaryValue;
 
     public override string ToString()
-        => $"Id: {Id} | Total Pedido: {TotalValue} | Quantidade: {Quantity} | Produto: {ProductId} | Valor Unitário: {UnitaryValue}";
+        =>
+            $"Id: {Id} | Total Pedido: {TotalValue} | Quantidade: {Quantity} | Produto: {ProductId} | Valor Unitário: {UnitaryValue}";
 
     #endregion
 }

@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace ConvenienceStore.Shared.Utils;
 
-public class ErrorResult(string? message)
+public class ErrorResult() : ProblemDetails
 {
-    public string? Message { get; private set; } = message;
     public DateTime DateTime { get; private set; } = DateTime.Now;
 }

@@ -1,11 +1,11 @@
 using ConvenienceStore.Features.Kardexs.Models;
-using ConvenienceStore.Features.Pixes.ValueObjects;
-using ConvenienceStore.Features.Users.Models;
 using ConvenienceStore.Features.OrderItems.Models;
+using ConvenienceStore.Features.Users.Models;
+using ConvenienceStore.Shared.Contracts;
 
 namespace ConvenienceStore.Features.Products.Models;
 
-public class Product(string name, string? description, decimal value, Guid userId)
+public class Product(string name, string? description, decimal value, Guid userId) : IBaseModel
 {
     #region Properties
 

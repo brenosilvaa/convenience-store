@@ -1,6 +1,6 @@
 using AutoMapper;
+using ConvenienceStore.Features.Users.Contracts;
 using ConvenienceStore.Features.Users.Models;
-using ConvenienceStore.Features.Users.Repos;
 using ConvenienceStore.Features.Users.Validators;
 using ConvenienceStore.Features.Users.ViewModels;
 using ConvenienceStore.Shared.Exceptions;
@@ -8,7 +8,7 @@ using FluentValidation;
 
 namespace ConvenienceStore.Features.Users.Services;
 
-public class UserService(IMapper mapper, UserValidator userValidator, UserRepo repo)
+public class UserService(IMapper mapper, IUserRepo repo, UserValidator userValidator) : IUserService
 {
     private async Task<User> _FindAsync(Guid id)
     {
