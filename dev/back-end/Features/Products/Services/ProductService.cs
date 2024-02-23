@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using ConvenienceStore.Features.Products.Contracts;
 using ConvenienceStore.Features.Products.Models;
 using ConvenienceStore.Features.Products.Repos;
 using ConvenienceStore.Features.Products.Validators;
 using ConvenienceStore.Features.Products.ViewModels;
-using ConvenienceStore.Features.Users.ViewModels;
 using ConvenienceStore.Shared.Exceptions;
 using FluentValidation;
 
 namespace ConvenienceStore.Features.Products.Services
 {
-    public class ProductService(IMapper mapper, ProductValidator productValidator, ProductRepo repo)
+    public class ProductService(IMapper mapper, ProductValidator productValidator, ProductRepo repo) : IProductService
     {
         private async Task<Product> _FindAsync(Guid id)
         {
