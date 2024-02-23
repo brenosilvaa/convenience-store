@@ -11,9 +11,9 @@ public class OrderItem : IBaseModel
 
     public Guid Id { get; private set; }
     public long OrderId { get; private set; }
-    public Order? Order { get; private set; }
+    public virtual Order? Order { get; private set; }
     public long ProductId { get; private set; }
-    public Product? Product { get; private set; }
+    public virtual Product? Product { get; private set; }
     public int Quantity { get; private set; }
     public decimal TotalValue { get; private set; }
     public decimal UnitaryValue { get; private set; }

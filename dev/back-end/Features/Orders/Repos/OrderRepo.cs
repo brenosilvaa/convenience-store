@@ -11,7 +11,7 @@ public class OrderRepo(DataContext context) : BaseRepo<Order>(context)
         => await DbSet.OrderBy(order => order.Date).ToListAsync();
 
     public async Task<IList<Order>> ListNotCanceledAsync() 
-        => await DbSet.Where(x => !x.IsCanceled).OrderBy(order => order.Date).ToListAsync();
+        => await DbSet.Where(x => !x.IsCancelled).OrderBy(order => order.Date).ToListAsync();
     public async Task<IList<Order>> ListCanceledAsync() 
-        => await DbSet.Where(x => x.IsCanceled).OrderBy(order => order.Date).ToListAsync();
+        => await DbSet.Where(x => x.IsCancelled).OrderBy(order => order.Date).ToListAsync();
 }

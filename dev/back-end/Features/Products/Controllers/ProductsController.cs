@@ -1,5 +1,4 @@
 ﻿using ConvenienceStore.Features.Products.Contracts;
-using ConvenienceStore.Features.Products.Contracts;
 using ConvenienceStore.Features.Products.ViewModels;
 using ConvenienceStore.Shared.Utils;
 using Microsoft.AspNetCore.Mvc;

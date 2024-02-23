@@ -14,7 +14,7 @@ public class Product(string name, string? description, decimal value, Guid userI
     public string? Description { get; private set; } = description;
     public decimal Value { get; private set; } = value;
     public Guid UserId { get; private set; } = userId;
-    public User? User { get; private set; }
+    public virtual User? User { get; private set; }
     public string? Image { get; private set; }
     public IList<OrderItem> Items { get; private set; } = [];
     public IList<Kardex> Kardexes { get; private set; } = [];
