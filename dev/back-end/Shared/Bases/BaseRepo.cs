@@ -1,9 +1,10 @@
 using ConvenienceStore.Infra.Context;
+using ConvenienceStore.Shared.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConvenienceStore.Shared.Bases;
 
-public class BaseRepo<T>(DataContext context) where T : class
+public class BaseRepo<T>(DataContext context) where T : class, IBaseModel
 {
     protected readonly DbSet<T> DbSet = context.Set<T>();
 
