@@ -9,7 +9,7 @@ using FluentValidation;
 
 namespace ConvenienceStore.Features.OrderItems.Services;
 
-public class OrderItemService(IMapper mapper, OrderItemValidator orderItemValidator, OrderItemRepo repo) : IOrderItemService
+public class OrderItemService(IMapper mapper, IOrderItemRepo repo, OrderItemValidator orderItemValidator) : IOrderItemService
 {
     private async Task<OrderItem> _FindAsync(Guid id)
     {

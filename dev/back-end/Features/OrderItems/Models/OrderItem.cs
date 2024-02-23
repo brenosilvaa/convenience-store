@@ -10,9 +10,9 @@ public class OrderItem : IBaseModel
     #region Properties
 
     public Guid Id { get; private set; }
-    public long OrderId { get; private set; }
+    public Guid OrderId { get; private set; }
     public virtual Order? Order { get; private set; }
-    public long ProductId { get; private set; }
+    public Guid ProductId { get; private set; }
     public virtual Product? Product { get; private set; }
     public int Quantity { get; private set; }
     public decimal TotalValue { get; private set; }
@@ -22,7 +22,7 @@ public class OrderItem : IBaseModel
 
     #region Constructors
 
-    public OrderItem(long orderId, long productId, int quantity, decimal unitaryValue)
+    public OrderItem(Guid orderId, Guid productId, int quantity, decimal unitaryValue)
     {
         Update(orderId, productId, quantity, unitaryValue);
     }
@@ -31,7 +31,7 @@ public class OrderItem : IBaseModel
 
     #region Methods
 
-    public void Update(long orderId, long productId, int quantity, decimal unitaryValue)
+    public void Update(Guid orderId, Guid productId, int quantity, decimal unitaryValue)
     {
         OrderId = orderId;
         ProductId = productId;

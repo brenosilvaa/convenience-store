@@ -11,8 +11,9 @@ namespace ConvenienceStore.Features.Products.Configs
             builder.HasKey(x => x.Id);
 
             builder.HasOne(x => x.User)
-                    .WithMany(x => x.Products)
-                      .HasForeignKey(x => x.UserId);
+                .WithMany(x => x.Products)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

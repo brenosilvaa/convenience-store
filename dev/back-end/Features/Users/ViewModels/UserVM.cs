@@ -9,8 +9,17 @@ public class UserVM
     [Required] public required string Name { get; set; }
     [Required, EmailAddress] public required string Email { get; set; }
     public string? Image { get; set; }
+
+    /// <summary>
+    /// Se o usuário for um vendedor [IsSeller], então a chave e seu respectivo tipos são retornados. Se o usuário for um cliente [IsSeller], esta propriedade retornará "null" 
+    /// </summary>
     public Pix? Pix { get; set; }
-    [Required] public bool IsSeller { get; set; }
+
+    /// <summary>
+    /// Indica se o usuário é um vendedor (true) ou um cliente (false)
+    /// </summary>
+    [Required]
+    public bool IsSeller { get; set; }
 
     public UserVM()
     {

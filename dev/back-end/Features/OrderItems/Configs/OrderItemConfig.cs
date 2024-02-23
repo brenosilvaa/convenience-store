@@ -11,11 +11,13 @@ public class OrderItemConfig : IEntityTypeConfiguration<OrderItem>
         builder.HasKey(orderItem => orderItem.Id);
 
         builder.HasOne(x => x.Order)
-                 .WithMany(x => x.Items)
-                 .HasForeignKey(x => x.OrderId);
+            .WithMany(x => x.Items)
+            .HasForeignKey(x => x.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.Product)
-               .WithMany(x => x.Items)
-               .HasForeignKey(x => x.ProductId);
+            .WithMany(x => x.Items)
+            .HasForeignKey(x => x.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

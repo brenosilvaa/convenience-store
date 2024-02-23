@@ -7,8 +7,8 @@ public class Kardex
     #region Properties
 
     public Guid Id { get; private set; }
-    public long ProductId { get; private set; }
-    public Product? Product { get; private set; }
+    public Guid ProductId { get; private set; }
+    public virtual Product? Product { get; private set; }
     public DateTime Date { get; private set; }
     public bool IsEntry { get; private set; }
     public int AbsoluteQuantity { get; private set; }
@@ -18,14 +18,14 @@ public class Kardex
     public decimal UnitValue { get; private set; }
     public decimal TotalValue { get; private set; }
     public string History { get; private set; }
-    public int SaldoDisponivel { get; private set; }
-    public decimal CustoMedio { get; private set; }
+    public int AvailableStock { get; private set; }
+    public decimal AverageCost { get; private set; }
 
     #endregion
 
     #region Constructors
 
-    public Kardex(long productId, bool isEntry, int absoluteQuantity, decimal absoluteUnitValue, string history)
+    public Kardex(Guid productId, bool isEntry, int absoluteQuantity, decimal absoluteUnitValue, string history)
     {
         ProductId = productId;
         Date = DateTime.Now;
