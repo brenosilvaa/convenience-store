@@ -1,3 +1,4 @@
+using ConvenienceStore.Features.OrderItems.IoC;
 using ConvenienceStore.Features.Users.IoC;
 using ConvenienceStore.Infra.Context;
 using ConvenienceStore.Shared.Middlewares;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(Program).Assembly);
 
         services.AddUserInfra();
+        services.AddOrderItemInfra();
 
         return services;
     }
@@ -23,7 +25,7 @@ public static class DependencyInjection
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
     {
         app.UseExceptionHandler();
-        
+
         return app;
     }
 }
