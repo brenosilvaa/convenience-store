@@ -1,4 +1,5 @@
 using AutoMapper;
+using ConvenienceStore.Features.OrderItems.Contracts;
 using ConvenienceStore.Features.OrderItems.Models;
 using ConvenienceStore.Features.OrderItems.Repos;
 using ConvenienceStore.Features.OrderItems.Validators;
@@ -8,7 +9,7 @@ using FluentValidation;
 
 namespace ConvenienceStore.Features.OrderItems.Services;
 
-public class OrderItemService(IMapper mapper, OrderItemValidator orderItemValidator, OrderItemRepo repo)
+public class OrderItemService(IMapper mapper, IOrderItemRepo repo, OrderItemValidator orderItemValidator) : IOrderItemService
 {
     private async Task<OrderItem> _FindAsync(Guid id)
     {

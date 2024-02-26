@@ -3,8 +3,8 @@
     public class OrderItemVM
     {
         public Guid Id { get; set; }
-        public long OrderId { get; set; }
-        public long ProductId { get; set; }
+        public Guid OrderId { get; set; }
+        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal TotalValue { get; set; }
         public decimal UnitaryValue { get; set; }
@@ -13,7 +13,7 @@
         {
         }
 
-        public OrderItemVM(Guid id, long orderId, long productId, int quantity, decimal totalValue, decimal unitaryValue)
+        public OrderItemVM(Guid id, Guid orderId, Guid productId, int quantity, decimal totalValue, decimal unitaryValue)
         {
             Id = id;
             OrderId = orderId;

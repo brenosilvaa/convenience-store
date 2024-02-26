@@ -10,6 +10,12 @@ namespace ConvenienceStore.Features.Users.Services;
 
 public class UserService(IMapper mapper, IUserRepo repo, UserValidator userValidator) : IUserService
 {
+    /// <summary>
+    /// Método responsável por encontrar usuário pelo ID no banco de dados e retornar seu valor ou uma exceção "NotFoundException"
+    /// </summary>
+    /// <param name="id">ID do Usuário</param>
+    /// <returns>Usuário</returns>
+    /// <exception cref="NotFoundException">Não Encontrado</exception>
     private async Task<User> _FindAsync(Guid id)
     {
         var user = await repo.FindAsync(id);

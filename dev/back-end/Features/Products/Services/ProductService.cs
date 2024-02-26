@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ConvenienceStore.Features.Products.Contracts;
 using ConvenienceStore.Features.Products.Models;
-using ConvenienceStore.Features.Products.Repos;
 using ConvenienceStore.Features.Products.Validators;
 using ConvenienceStore.Features.Products.ViewModels;
 using ConvenienceStore.Shared.Exceptions;
@@ -9,7 +8,7 @@ using FluentValidation;
 
 namespace ConvenienceStore.Features.Products.Services
 {
-    public class ProductService(IMapper mapper, ProductValidator productValidator, ProductRepo repo) : IProductService
+    public class ProductService(IMapper mapper, IProductRepo repo, ProductValidator productValidator) : IProductService
     {
         private async Task<Product> _FindAsync(Guid id)
         {
@@ -18,7 +17,7 @@ namespace ConvenienceStore.Features.Products.Services
         }
 
         public async Task<IList<ProductVM>> ListAsync()
-      => mapper.Map<IList<ProductVM>>(await repo.ListAsync());
+            => mapper.Map<IList<ProductVM>>(await repo.ListAsync());
 
         public async Task<ProductVM> FindAsync(Guid id)
         {
