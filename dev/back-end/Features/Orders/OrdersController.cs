@@ -1,5 +1,9 @@
-﻿using ConvenienceStore.Features.Orders.Models;
+﻿using ConvenienceStore.Features.Orders.Contracts;
+using ConvenienceStore.Features.Orders.Models;
 using ConvenienceStore.Features.Orders.Services;
+using ConvenienceStore.Features.Orders.ViewModels;
+using ConvenienceStore.Shared.Exceptions;
+using ConvenienceStore.Shared.Utils;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +12,7 @@ namespace ConvenienceStore.Features.Orders.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
-public class OrdersController(OrderService service) : ControllerBase
+public class OrdersController(IOrderService service) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType<IList<Order>>(200)]
@@ -27,26 +31,26 @@ public class OrdersController(OrderService service) : ControllerBase
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new ErrorResult(ex.Message));
+            return NotFound(new ErrorResult());
         }
         catch (Exception ex)
         {
-            return BadRequest(new ErrorResult(ex.Message));
+            return BadRequest(new ErrorResult());
         }
     }
 
     [HttpPost]
     [ProducesResponseType<Order>(200)]
     [ProducesResponseType<ErrorResult>(400)]
-    public async Task<IActionResult> AddAsync([FromBody] CreateOrderVM vm)
+    public async Task<IActionResult> AddAsync([FromBody] CreateOrderVm vm)
     {
         try
         {
-            return Ok(await service.AddAsync(vm));
+            return Ok(await service.CreateAsync(vm));
         }
         catch (Exception ex)
         {
-            return BadRequest(new ErrorResult(ex.Message));
+            return BadRequest(new ErrorResult());
         }
     }
 
@@ -54,7 +58,7 @@ public class OrdersController(OrderService service) : ControllerBase
     [ProducesResponseType<Order>(200)]
     [ProducesResponseType<ErrorResult>(400)]
     [ProducesResponseType<ErrorResult>(404)]
-    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] CreateOrderVM vm)
+    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] CreateOrderVm vm)
     {
         try
         {
@@ -62,11 +66,11 @@ public class OrdersController(OrderService service) : ControllerBase
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new ErrorResult(ex.Message));
+            return NotFound(new ErrorResult());
         }
         catch (Exception ex)
         {
-            return BadRequest(new ErrorResult(ex.Message));
+            return BadRequest(new ErrorResult());
         }
     }
 
@@ -82,12 +86,12 @@ public class OrdersController(OrderService service) : ControllerBase
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new ErrorResult(ex.Message));
+            return NotFound(new ErrorResult());
         }
         catch (Exception ex)
         {
 
-            return BadRequest(new ErrorResult(ex.Message));
+            return BadRequest(new ErrorResult());
         }
     }
 }
