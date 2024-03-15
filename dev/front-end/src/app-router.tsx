@@ -4,6 +4,7 @@ import HomePage from "./features/common/pages/home";
 import AboutPage from "./features/common/pages/about";
 import NotFoundPage from "./features/common/pages/not-found";
 import SignUpPage from "./features/users/pages/sign-up";
+import ProductsPage from "./features/products/pages/products";
 
 const AppRouter = () => {
     return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
                     <Route path="" element={<HomePage />} />
                     <Route path="sobre" element={<AboutPage />} />
                     <Route path="cadastro" element={<SignUpPage />} />
+                    <Route path="produtos" element={<ProductsPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
             </Routes>

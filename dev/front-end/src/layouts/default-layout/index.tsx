@@ -41,6 +41,12 @@ const DefaultLayout = () => {
                                 Sobre
                             </Typography>
                         </Link>
+                        •
+                        <Link to={"/produtos"} style={{ textDecorationColor: "white"}}>
+                            <Typography component={"span"} sx={{ color: "white" }}>
+                                Produtos
+                            </Typography>
+                        </Link>
 
                         <Link to={"/cadastro"} style={{ textDecorationColor: "white", marginLeft: "auto"  }}>
                             <Typography component={"span"} sx={{ color: "white" }}>
