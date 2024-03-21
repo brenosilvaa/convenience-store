@@ -1,4 +1,5 @@
 using ConvenienceStore.Features.OrderItems.IoC;
+using ConvenienceStore.Features.Products.IoC;
 using ConvenienceStore.Features.Orders.IoC;
 using ConvenienceStore.Features.Users.IoC;
 using ConvenienceStore.Infra.Context;
@@ -12,6 +13,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         #region DbContext
+
         var dbHost = config["DB_HOST"];
         var dbPort = config["DB_PORT"];
         var dbDatabase = config["DB_DATABASE"];
@@ -19,11 +21,9 @@ public static class DependencyInjection
         var dbPassword = config["DB_PWD"];
 
         var connectionString = $"server={dbHost};port={dbPort};userid={dbUser};pwd={dbPassword};database={dbDatabase};default command timeout=0;";
-        
-        services.AddDbContext<DataContext>(options =>
-        {
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-        });
+
+        services.AddDbContext<DataContext>(options => { options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); });
+
         #endregion
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -32,6 +32,7 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(Program).Assembly);
 
         services.AddUserInfra()
+                .AddProductInfra()
                 .AddOrderItemInfra()
                 .AddOrderInfra();
 
