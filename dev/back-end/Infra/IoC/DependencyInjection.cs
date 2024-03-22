@@ -1,5 +1,6 @@
 using ConvenienceStore.Features.OrderItems.IoC;
 using ConvenienceStore.Features.Products.IoC;
+using ConvenienceStore.Features.Orders.IoC;
 using ConvenienceStore.Features.Users.IoC;
 using ConvenienceStore.Infra.Context;
 using ConvenienceStore.Shared.Middlewares;
@@ -30,9 +31,10 @@ public static class DependencyInjection
 
         services.AddAutoMapper(typeof(Program).Assembly);
 
-        services.AddUserInfra();
-        services.AddProductInfra();
-        services.AddOrderItemInfra();
+        services.AddUserInfra()
+                .AddProductInfra()
+                .AddOrderItemInfra()
+                .AddOrderInfra();
 
         return services;
     }
