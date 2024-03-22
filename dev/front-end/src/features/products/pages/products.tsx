@@ -8,7 +8,7 @@ import { ProductService } from "../../products/services/product-service";
 import { useSnackbar } from "notistack";
 
 const ProductsPage = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<CreateProduct>();
+    const { register, handleSubmit, setFocus, reset, formState: { errors } } = useForm<CreateProduct>();
     const [imageUrl, setImageUrl] = useState<string>("");
     const { enqueueSnackbar } = useSnackbar();
     
@@ -29,6 +29,7 @@ const ProductsPage = () => {
 
         if (result != null) {
             handleSucces();
+            setImageUrl("");
             setFocus("name");
             reset();
         } else {
