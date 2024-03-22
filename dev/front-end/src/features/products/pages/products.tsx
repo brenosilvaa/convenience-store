@@ -5,21 +5,35 @@ import PageTitle from "../../../shared/components/page-title";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CreateProduct } from "../../products/models/create-product";
 import { ProductService } from "../../products/services/product-service";
+import { useSnackbar } from "notistack";
 
 const ProductsPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<CreateProduct>();
     const [imageUrl, setImageUrl] = useState<string>("");
-
+    const { enqueueSnackbar } = useSnackbar();
+    
     const handleImageUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setImageUrl(event.target.value);
+    };
+
+    const handleSucces = () => {
+        enqueueSnackbar('Salvo com succeso!', { variant: 'success', autoHideDuration: 3000 });
+    };
+
+    const handleError = () => {
+        enqueueSnackbar('Algo deu errado!', { variant: 'error', autoHideDuration: 3000 });
     };
 
     const save: SubmitHandler<CreateProduct> = async (createdProduct) => {
         const result = await ProductService.instance.createAsync(createdProduct);
 
-        setFocus("name");
-        reset();
-        console.log(result);
+        if (result != null) {
+            handleSucces();
+            setFocus("name");
+            reset();
+        } else {
+            handleError();
+        }
     };
 
     return (
