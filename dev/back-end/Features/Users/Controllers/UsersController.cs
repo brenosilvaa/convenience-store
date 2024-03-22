@@ -51,7 +51,7 @@ public class UsersController(IUserService service) : ControllerBase
     [ProducesResponseType<ErrorResult>(404)]
     public async Task<IActionResult> FindAsync(Guid id)
         => Ok(await service.FindAsync(id));
-
+    
     /// <summary>
     /// Adiciona um novo usuário ao banco de dados 
     /// </summary>

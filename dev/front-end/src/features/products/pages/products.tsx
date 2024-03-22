@@ -6,11 +6,13 @@ import { CreateProduct } from "../../products/models/create-product";
 import { ProductService } from "../../products/services/product-service";
 
 const ProductsPage = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<CreateProduct>();
+    const { register, handleSubmit, formState: { errors }, reset, setFocus } = useForm<CreateProduct>();
 
     const save: SubmitHandler<CreateProduct> = async (createdProduct) => {
         const result = await ProductService.instance.createAsync(createdProduct);
 
+        setFocus("name");
+        reset();
         console.log(result);
     }
 
