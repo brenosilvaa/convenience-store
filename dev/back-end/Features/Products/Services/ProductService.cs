@@ -28,7 +28,8 @@ namespace ConvenienceStore.Features.Products.Services
         public async Task<ProductVM> AddAsync(CreateProductVM vm)
         {
             var product = new Product(vm.Name, vm.Description, vm.Value, vm.UserId);
-
+            product.SetImage(vm.Image);
+            
             await productValidator.ValidateAndThrowAsync(product);
 
             repo.Add(product);
@@ -42,6 +43,8 @@ namespace ConvenienceStore.Features.Products.Services
             var product = await _FindAsync(id);
 
             product.Update(vm.Name, vm.Description, vm.Value, vm.UserId);
+            product.SetImage(vm.Image);
+            
             await productValidator.ValidateAndThrowAsync(product);
 
             repo.Update(product);
