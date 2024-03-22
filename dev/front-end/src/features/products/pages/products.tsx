@@ -16,6 +16,9 @@ const ProductsPage = () => {
 
     const save: SubmitHandler<CreateProduct> = async (createdProduct) => {
         const result = await ProductService.instance.createAsync(createdProduct);
+
+        setFocus("name");
+        reset();
         console.log(result);
     };
 

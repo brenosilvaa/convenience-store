@@ -1,78 +1,62 @@
+using AutoMapper;
+
+using ConvenienceStore.Features.Orders.Contracts;
 using ConvenienceStore.Features.Orders.Models;
 using ConvenienceStore.Features.Orders.Repos;
 using ConvenienceStore.Features.Orders.Validators;
+using ConvenienceStore.Features.Orders.ViewModels;
+
 using FluentValidation;
 
 namespace ConvenienceStore.Features.Orders.Services;
 
-public class OrderService(OrderValidator orderValidator, OrderRepo orderRepo)
+public class OrderService(OrderValidator orderValidator, IOrderRepo orderRepo, IMapper mapper) : IOrderService
 {
 
-    public async Task<IList<Order>> ListAsync()
-        => await orderRepo.ListAsync();
+    public async Task<IList<OrderVm>> ListAsync()
+        => mapper.Map<IList<OrderVm>>(await orderRepo.ListAsync());
 
-    public async Task<Order?> FindAsync(Guid orderId)
-        => await orderRepo.FindAsync(orderId);
+    public async Task<OrderVm?> FindAsync(Guid orderId)
+        => mapper.Map<OrderVm?>(await orderRepo.FindAsync(orderId));
 
-    public async Task<Order> CreateAsync(Order order)
+    public async Task<OrderVm> CreateAsync(CreateOrderVm vm)
     {
-        try
-        {
-            await orderValidator.ValidateAndThrowAsync(order);
+        var order = new Order(vm.SellerId, vm.CustomerId, vm.Observation);
 
-            orderRepo.Add(order);
+        await orderValidator.ValidateAndThrowAsync(order);
 
-            await orderRepo.Commit();
+        orderRepo.Add(order);
 
-            return order;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            throw;
-        }
+        await orderRepo.Commit();
+
+        return mapper.Map<OrderVm>(order);
     }
 
-    public async Task<Order> UpdateAsync(Order order)
+    public async Task<OrderVm> UpdateAsync(Guid orderId, CreateOrderVm vm)
     {
-        try
-        {
-            var orderUpdate = await orderRepo.FindAsync(order.Id);
+        var orderUpdate = await orderRepo.FindAsync(orderId) ?? throw new Exception("Pedido inexistente.");
 
-            if (orderUpdate is null)
-                throw new Exception("Pedido inexistente.");
+        orderUpdate.Update(vm.SellerId,
+                           vm.CustomerId,
+                           vm.Observation);
 
-            orderUpdate.Update(order.SellerId,
-                               order.CustomerId,
-                               order.Observation);
+        await orderValidator.ValidateAndThrowAsync(orderUpdate);
 
-            await orderValidator.ValidateAndThrowAsync(orderUpdate);
+        orderRepo.Update(orderUpdate);
 
-            orderRepo.Update(orderUpdate);
+        await orderRepo.Commit();
 
-            await orderRepo.Commit();
-
-            return orderUpdate;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            throw;
-        }
+        return mapper.Map<OrderVm>(orderUpdate);
     }
 
-    public async Task RemoveAsync(Order order)
+    public async Task<bool> RemoveAsync(Guid orderId)
     {
-        try
-        {
-            orderRepo.Remove(order);
+        var order = await orderRepo.FindAsync(orderId) ?? throw new Exception("Pedido inexistente.");
 
-            await orderRepo.Commit();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            throw;
-        }
+        orderRepo.Remove(order);
+
+        await orderRepo.Commit();
+
+        return true;
     }
 }
