@@ -4,14 +4,30 @@ import PageTitle from "../../../shared/components/page-title";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CreateProduct } from "../../products/models/create-product";
 import { ProductService } from "../../products/services/product-service";
+import { useSnackbar } from "notistack";
 
 const ProductsPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<CreateProduct>();
 
+    const { enqueueSnackbar } = useSnackbar();
+
+
+    const handleSucces = () => {
+        enqueueSnackbar('Salvo com succeso!', { variant: 'success', autoHideDuration: 3000 });
+    };
+
+    const handleError = () => {
+        enqueueSnackbar('Algo deu errado!', { variant: 'error', autoHideDuration: 3000 });
+    };
+
     const save: SubmitHandler<CreateProduct> = async (createdProduct) => {
         const result = await ProductService.instance.createAsync(createdProduct);
 
-        console.log(result);
+        if (result != null)
+            handleSucces();
+        else {
+            handleError();
+        }
     }
 
     return (
