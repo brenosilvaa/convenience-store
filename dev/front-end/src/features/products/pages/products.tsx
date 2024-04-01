@@ -8,6 +8,7 @@ import { IoMdAddCircle } from "react-icons/io";
 
 const ProductsPage = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
+    const [addOpened, setAddOpened] = useState<boolean>(false);
 
     const add = () => {
         setSelectedProduct({
@@ -18,6 +19,8 @@ const ProductsPage = () => {
             image: "",
             userId: "08dc452b-ebc9-4410-8eba-1600de6d7668"
         });
+
+        setAddOpened(true);
     }
 
     return (
@@ -35,7 +38,7 @@ const ProductsPage = () => {
 
             <Box sx={{ display: "flex", gap: 3 }}>
                 <ProductsList selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
-                <ProductForm selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
+                <ProductForm selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} opened={addOpened} setOpened={setAddOpened}/>
             </Box>
         </>
     );
