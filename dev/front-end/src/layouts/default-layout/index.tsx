@@ -1,5 +1,7 @@
 import { Box, Container, Stack, Typography, styled } from "@mui/material";
 import { Link, Outlet } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { cartState } from "../../features/order-item/states/cart-state";
 
 const BannerPrincipal = styled("img")({
     width: "100%",
@@ -19,6 +21,8 @@ const Mask = styled("div")({
 });
 
 const DefaultLayout = () => {
+    const cart = useRecoilValue(cartState);
+
     return (
         <>
             <Container component={"header"} sx={{ my: 2, p: "0 !important", position: "relative" }}>
@@ -36,19 +40,25 @@ const DefaultLayout = () => {
                             </Typography>
                         </Link>
                         •
-                        <Link to={"/sobre"} style={{ textDecorationColor: "white"}}>
+                        <Link to={"/sobre"} style={{ textDecorationColor: "white" }}>
                             <Typography component={"span"} sx={{ color: "white" }}>
                                 Sobre
                             </Typography>
                         </Link>
                         •
-                        <Link to={"/produtos"} style={{ textDecorationColor: "white"}}>
+                        <Link to={"/produtos"} style={{ textDecorationColor: "white" }}>
                             <Typography component={"span"} sx={{ color: "white" }}>
                                 Produtos
                             </Typography>
                         </Link>
 
-                        <Link to={"/cadastro"} style={{ textDecorationColor: "white", marginLeft: "auto"  }}>
+                        <Link to={"/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
+                            <Typography component={"span"} sx={{ color: "white" }}>
+                                Carrinho ({cart.length === 0 ? "vazio" : cart.length})
+                            </Typography>
+                        </Link>
+                        •
+                        <Link to={"/cadastro"} style={{ textDecorationColor: "white" }}>
                             <Typography component={"span"} sx={{ color: "white" }}>
                                 Cadastre-se
                             </Typography>

@@ -6,7 +6,7 @@ import NotFoundPage from "./features/common/pages/not-found";
 import SignUpPage from "./features/users/pages/sign-up";
 import ProductsPage from "./features/products/pages/products";
 import { SnackbarProvider } from "notistack";
-import ProductsShowcase from "./features/products/components/products-showcase";
+import CartPage from "./features/order-item/pages/cart";
 
 const AppRouter = () => {
     return (
@@ -18,6 +18,7 @@ const AppRouter = () => {
                         <Route path="sobre" element={<AboutPage />} />
                         <Route path="cadastro" element={<SignUpPage />} />
                         <Route path="produtos" element={<ProductsPage />} />
+                        <Route path="carrinho" element={<CartPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Route>
                 </Routes>
