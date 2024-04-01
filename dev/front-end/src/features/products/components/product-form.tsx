@@ -1,4 +1,4 @@
-import { Box, Stack, TextField, Button, Typography } from "@mui/material";
+import { Box, Stack, TextField, Button, Typography, Drawer } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -10,9 +10,12 @@ import { ProductService } from "../services/product-service";
 interface ProductFormProps {
     selectedProduct: Product | undefined;
     setSelectedProduct: React.Dispatch<React.SetStateAction<Product | undefined>>;
+    opened: boolean;
+    setOpened: any;
+
 }
 
-const ProductForm = ({ selectedProduct, setSelectedProduct }: ProductFormProps) => {
+const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }: ProductFormProps) => {
     const { register, handleSubmit, setFocus, reset, setValue, formState: { errors } } = useForm<CreateProduct>();
     const [imageUrl, setImageUrl] = useState<string>("");
     const { enqueueSnackbar } = useSnackbar();
@@ -40,6 +43,7 @@ const ProductForm = ({ selectedProduct, setSelectedProduct }: ProductFormProps) 
             setFocus("name");
             reset();
             setSelectedProduct(undefined);
+            setOpened(false);
         } else {
             handleError();
         }
@@ -55,75 +59,86 @@ const ProductForm = ({ selectedProduct, setSelectedProduct }: ProductFormProps) 
         }
     }, [selectedProduct]);
 
+
     return (
-        <Box style={{ display: "flex" }}>
-            <Stack component={"form"} onSubmit={handleSubmit(save)} gap={3} sx={{ maxWidth: 400, mt: 5 }}>
-                <TextField
-                    {...register("name", {
-                        required: "O campo é obrigatório.",
-                        minLength: { value: 3, message: "O campo nome deve possuir ao menos 3 caracteres." }
-                    })}
-                    label="Nome"
-                    variant="outlined"
-                    size="small"
-                    error={!!errors.name}
-                    helperText={errors.name?.message}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+        <Drawer
+            anchor="right"
+            open={opened}
+            onClose={() => setOpened(false)}
+            ModalProps={{ keepMounted: true }}
+        >
+            <Box style={{ display: "flex" }} sx={{ width: 380, p: 2, height: 1 }}>
+                <Stack component={"form"} onSubmit={handleSubmit(save)} gap={3} sx={{ maxWidth: 400, mt: 5 }}>
+                    <TextField
+                        {...register("name", {
+                            required: "O campo é obrigatório.",
+                            minLength: { value: 3, message: "O campo nome deve possuir ao menos 3 caracteres." }
+                        })}
+                        label="Nome"
+                        variant="outlined"
+                        size="small"
+                        error={!!errors.name}
+                        helperText={errors.name?.message}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
 
-                <TextField
-                    {...register("userId", { required: "O campo é obrigatório." })}
-                    type="text"
-                    label="Usuário"
-                    variant="outlined"
-                    size="small"
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+                    <TextField
+                        {...register("userId", { required: "O campo é obrigatório." })}
+                        type="text"
+                        label="Usuário"
+                        variant="outlined"
+                        size="small"
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
 
-                <TextField
-                    {...register("image")}
-                    type="text"
-                    label="Imagem"
-                    variant="outlined"
-                    size="small"
-                    onChange={handleImageUrlChange}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+                    <TextField
+                        {...register("image")}
+                        type="text"
+                        label="Imagem"
+                        variant="outlined"
+                        size="small"
+                        onChange={handleImageUrlChange}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
 
-                <TextField
-                    {...register("value", { required: "O campo é obrigatório." })}
-                    type="number"
-                    label="Valor"
-                    variant="outlined"
-                    size="small"
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+                    <TextField
+                        {...register("value", { required: "O campo é obrigatório." })}
+                        type="number"
+                        label="Valor"
+                        variant="outlined"
+                        size="small"
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
 
-                <TextField
-                    {...register("description")}
-                    type="text"
-                    label="Descrição"
-                    variant="outlined"
-                    size="small"
-                    multiline
-                    rows={3}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+                    <TextField
+                        {...register("description")}
+                        type="text"
+                        label="Descrição"
+                        variant="outlined"
+                        size="small"
+                        multiline
+                        rows={3}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
 
-                <Button type="submit" variant="contained" sx={{ mx: 16, mt: 1, gap: 1 }}>
-                    <IoMdCheckmarkCircleOutline />Cadastrar
-                </Button>
-            </Stack>
+                    <Button type="submit" variant="contained" sx={{ mx: 16, mt: 1, gap: 1 }}>
+                        <IoMdCheckmarkCircleOutline />Cadastrar
+                    </Button>
+                </Stack>
+
+
+            </Box>
+
 
             {imageUrl && (
                 <Box style={{ marginLeft: "20px" }}>
@@ -135,7 +150,8 @@ const ProductForm = ({ selectedProduct, setSelectedProduct }: ProductFormProps) 
                     </Box>
                 </Box>
             )}
-        </Box>
+        </Drawer >
+
     );
 }
 
