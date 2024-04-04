@@ -1,8 +1,9 @@
-import { Box, Container, Stack, Typography, styled } from "@mui/material";
+import { Badge, Box, Container, Stack, Typography, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Link, Outlet } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { cartState } from "../../features/order-item/states/cart-state";
+import { IoIosCart } from "react-icons/io";
 
 const BannerPrincipal = styled("img")({
     width: "100%",
@@ -27,7 +28,7 @@ const DefaultLayout = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const showBuildProductsSnackBar = () => {
-        enqueueSnackbar('Adicione alguns itens ao seu carrinho !', { variant: 'info', autoHideDuration: 3000,  });
+        enqueueSnackbar('Adicione alguns itens ao seu carrinho !', { variant: 'info', autoHideDuration: 3000, });
     }
 
     const cartIsEmpty = cart.length === 0;
@@ -61,10 +62,10 @@ const DefaultLayout = () => {
                             </Typography>
                         </Link>
 
-                        <Link onClick={cartIsEmpty ? showBuildProductsSnackBar : () => {}} to={cartIsEmpty ? "/" : "/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
-                            <Typography component={"span"} sx={{ color: "white" }}>
-                                Carrinho ({cartIsEmpty ? "vazio" : cart.length})
-                            </Typography>
+                        <Link onClick={cartIsEmpty ? showBuildProductsSnackBar : () => { }} to={cartIsEmpty ? "/" : "/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
+                            <Badge showZero={true} badgeContent={cartIsEmpty ? 0 : cart.length} color="primary">
+                                <IoIosCart size="25" color="white" />
+                            </Badge>
                         </Link>
                         •
                         <Link to={"/cadastro"} style={{ textDecorationColor: "white" }}>
