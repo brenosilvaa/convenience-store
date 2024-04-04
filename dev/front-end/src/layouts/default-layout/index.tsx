@@ -1,4 +1,5 @@
 import { Box, Container, Stack, Typography, styled } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { Link, Outlet } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { cartState } from "../../features/order-item/states/cart-state";
@@ -20,8 +21,16 @@ const Mask = styled("div")({
     left: 0
 });
 
+
 const DefaultLayout = () => {
     const cart = useRecoilValue(cartState);
+    const { enqueueSnackbar } = useSnackbar();
+
+    const showBuildProductsSnackBar = () => {
+        enqueueSnackbar('Adicione alguns itens ao seu carrinho !', { variant: 'info', autoHideDuration: 3000,  });
+    }
+
+    const cartIsEmpty = cart.length === 0;
 
     return (
         <>
@@ -52,9 +61,9 @@ const DefaultLayout = () => {
                             </Typography>
                         </Link>
 
-                        <Link to={"/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
+                        <Link onClick={cartIsEmpty ? showBuildProductsSnackBar : () => {}} to={cartIsEmpty ? "/" : "/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
                             <Typography component={"span"} sx={{ color: "white" }}>
-                                Carrinho ({cart.length === 0 ? "vazio" : cart.length})
+                                Carrinho ({cartIsEmpty ? "vazio" : cart.length})
                             </Typography>
                         </Link>
                         •
