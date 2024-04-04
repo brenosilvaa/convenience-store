@@ -19,7 +19,7 @@ const CartPage = () => {
 
         setCart(cartList);
 
-        enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000,  });
+        enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000, });
     }
 
     return (
@@ -41,20 +41,13 @@ const CartPage = () => {
                                         <IoMdRemoveCircle style={{ marginRight: 2 }} />Remover
                                     </Typography>
                                 </Box>
-                                <Divider sx={{ marginBottom: 2 }} />
+                                <Divider sx={{ marginBottom: "-2px" }} />
                             </>
                         }
                         secondary={
                             <Box>
                                 <Box sx={{ direction: "flex", justifyContent: "space-between" }}>
-                                    <Typography
-                                        component="span"
-                                        variant="body2"
-                                        color="text.primary"
-                                    >
-                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.product?.value ?? 0)}
-                                    </Typography>
-                                    <Typography component={"span"} sx={{
+                                    <Typography component={"span"} variant="caption" sx={{
                                         textAlign: "justify",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
@@ -65,8 +58,23 @@ const CartPage = () => {
                                     }}>
                                         {` - ${item.product?.description}`}
                                     </Typography>
-                                    <Typography>
-                                        {item.quantity} * {item.unitaryValue} = {item.totalValue}
+                                    <Box sx={{marginTop: 1}}>
+                                        <Typography component="span" variant="caption">
+                                            Quantidade - {item.quantity}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{marginTop: "-8px"}}>
+                                        <Typography component="span" variant="caption">
+                                            Valor unitário: {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.unitaryValue ?? 0)}
+                                        </Typography>
+                                    </Box>
+                                    <Typography
+                                        component="span"
+                                        variant="body1"
+                                        color="green"
+                                        sx={{ fontWeight: "bold" }}
+                                    >
+                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.product?.value ?? 0)}
                                     </Typography>
                                 </Box>
                             </Box>
