@@ -74,7 +74,7 @@ const CartPage = () => {
                                         color="green"
                                         sx={{ fontWeight: "bold" }}
                                     >
-                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.product?.value ?? 0)}
+                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format((item.product?.value ?? 0) * item.quantity)}
                                     </Typography>
                                 </Box>
                             </Box>
