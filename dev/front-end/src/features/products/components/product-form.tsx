@@ -1,8 +1,8 @@
-import { Box, Stack, TextField, Button, Typography, Drawer } from "@mui/material";
+import { Box, Stack, TextField, Button, Typography, Drawer, IconButton, Tooltip } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoMdCheckmarkCircleOutline, IoIosRefresh } from "react-icons/io";
 import { CreateProduct } from "../models/create-product";
 import { Product } from "../models/product";
 import { ProductService } from "../services/product-service";
@@ -69,7 +69,14 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
         >
             <Box style={{ display: "flex" }} sx={{ width: 380, p: 2, height: 1 }}>
                 <Stack component={"form"} onSubmit={handleSubmit(save)} gap={3} sx={{ maxWidth: 400, mt: 5 }}>
-                    <TextField
+                    <Box>
+                        <Tooltip title="Limpar campos">
+                            <IconButton onClick={() => reset()} color="warning" sx={{ backgroundColor: "warning" }}>
+                                <IoIosRefresh />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                    <TextField 
                         {...register("name", {
                             required: "O campo é obrigatório.",
                             minLength: { value: 3, message: "O campo nome deve possuir ao menos 3 caracteres." }
@@ -82,6 +89,7 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
                         InputLabelProps={{
                             shrink: true
                         }}
+                        sx={{marginTop: "-16px"}}
                     />
 
                     <TextField
@@ -130,13 +138,10 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
                             shrink: true
                         }}
                     />
-
                     <Button type="submit" variant="contained" sx={{ mx: 16, mt: 1, gap: 1 }}>
                         <IoMdCheckmarkCircleOutline />Cadastrar
                     </Button>
                 </Stack>
-
-
             </Box>
 
 
