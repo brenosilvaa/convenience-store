@@ -6,7 +6,7 @@ import NotFoundPage from "./features/common/pages/not-found";
 import SignUpPage from "./features/users/pages/sign-up";
 import ProductsPage from "./features/products/pages/products";
 import { SnackbarProvider } from "notistack";
-import CartPage from "./features/order-item/pages/cart";
+import CartPage from "./features/order/pages/cart";
 
 const AppRouter = () => {
     return (

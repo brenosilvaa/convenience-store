@@ -1,11 +1,12 @@
-import { List, ListItemButton, ListItemAvatar, Avatar, ListItemText, Typography, Box, ListItem, Button } from "@mui/material";
+import { List, ListItemAvatar, Avatar, ListItemText, Typography, Box, ListItem, Button } from "@mui/material";
 import { Product } from "../models/product";
 import { useState, useEffect } from "react";
 import { ProductService } from "../services/product-service";
 import { IoMdCart } from "react-icons/io";
-import { CreateOrderItem } from "../../order-item/models/create-order-item";
+import { CreateOrderItem } from "../../order/models/create-order-item";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cartState } from "../../order-item/states/cart-state";
+import { cartState } from "../../order/states/cart-state";
+import { useSnackbar } from "notistack";
 
 const ProductsShowcase = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -14,6 +15,8 @@ const ProductsShowcase = () => {
     const cart = useRecoilValue(cartState);
     const setCart = useSetRecoilState(cartState);
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const addToCart = (product: Product) => {
         const item = cart.find(x => x.productId === product.id);
 
@@ -21,6 +24,8 @@ const ProductsShowcase = () => {
             setCart(addProductToCart(product));
         else
             setCart(incrementQuantityToProductInsideCart(product, item));
+
+        enqueueSnackbar(`${product?.name} adicionado ao carrinho`, { variant: 'info', autoHideDuration: 3000 });
     }
 
     const addProductToCart = (product: Product) => {

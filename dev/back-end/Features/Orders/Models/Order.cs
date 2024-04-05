@@ -23,10 +23,13 @@ public class Order : IBaseModel
 
     #region Constructors
 
-    public Order(Guid sellerId, Guid customerId, string? observation)
+    private Order() { }
+
+    public Order(Guid sellerId, Guid customerId, IList<OrderItem> items, string? observation = null)
     {
         Date = DateTime.Now;
-        Items = [];
+        Items = items;
+        TotalValue = items.Sum(x => x.TotalValue);
         Update(sellerId, customerId, observation);
     }
 

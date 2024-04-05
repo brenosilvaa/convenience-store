@@ -2,7 +2,7 @@ using AutoMapper;
 using ConvenienceStore.Features.OrderItems.Models;
 using ConvenienceStore.Features.OrderItems.ViewModels;
 
-namespace ConvenienceStore.Features.Users.MapProfiles;
+namespace ConvenienceStore.Features.OrderItems.MapProfiles;
 
 public class OrderItemMapProfile : Profile
 {

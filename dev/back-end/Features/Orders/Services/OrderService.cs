@@ -13,15 +13,15 @@ namespace ConvenienceStore.Features.Orders.Services;
 public class OrderService(OrderValidator orderValidator, IOrderRepo orderRepo, IMapper mapper) : IOrderService
 {
 
-    public async Task<IList<OrderVm>> ListAsync()
-        => mapper.Map<IList<OrderVm>>(await orderRepo.ListAsync());
+    public async Task<IList<OrderVM>> ListAsync()
+        => mapper.Map<IList<OrderVM>>(await orderRepo.ListAsync());
 
-    public async Task<OrderVm?> FindAsync(Guid orderId)
-        => mapper.Map<OrderVm?>(await orderRepo.FindAsync(orderId));
+    public async Task<OrderVM?> FindAsync(Guid orderId)
+        => mapper.Map<OrderVM?>(await orderRepo.FindAsync(orderId));
 
-    public async Task<OrderVm> CreateAsync(CreateOrderVm vm)
+    public async Task<OrderVM> CreateAsync(CreateOrderVM vm)
     {
-        var order = new Order(vm.SellerId, vm.CustomerId, vm.Observation);
+        var order = new Order(vm.SellerId, vm.CustomerId, vm.Items, vm.Observation);
 
         await orderValidator.ValidateAndThrowAsync(order);
 
@@ -29,10 +29,10 @@ public class OrderService(OrderValidator orderValidator, IOrderRepo orderRepo, I
 
         await orderRepo.Commit();
 
-        return mapper.Map<OrderVm>(order);
+        return mapper.Map<OrderVM>(order);
     }
 
-    public async Task<OrderVm> UpdateAsync(Guid orderId, CreateOrderVm vm)
+    public async Task<OrderVM> UpdateAsync(Guid orderId, CreateOrderVM vm)
     {
         var orderUpdate = await orderRepo.FindAsync(orderId) ?? throw new Exception("Pedido inexistente.");
 
@@ -46,7 +46,7 @@ public class OrderService(OrderValidator orderValidator, IOrderRepo orderRepo, I
 
         await orderRepo.Commit();
 
-        return mapper.Map<OrderVm>(orderUpdate);
+        return mapper.Map<OrderVM>(orderUpdate);
     }
 
     public async Task<bool> RemoveAsync(Guid orderId)

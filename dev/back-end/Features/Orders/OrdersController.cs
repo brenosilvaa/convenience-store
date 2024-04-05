@@ -42,7 +42,7 @@ public class OrdersController(IOrderService service) : ControllerBase
     [HttpPost]
     [ProducesResponseType<Order>(200)]
     [ProducesResponseType<ErrorResult>(400)]
-    public async Task<IActionResult> AddAsync([FromBody] CreateOrderVm vm)
+    public async Task<IActionResult> AddAsync([FromBody] CreateOrderVM vm)
     {
         try
         {
@@ -58,7 +58,7 @@ public class OrdersController(IOrderService service) : ControllerBase
     [ProducesResponseType<Order>(200)]
     [ProducesResponseType<ErrorResult>(400)]
     [ProducesResponseType<ErrorResult>(404)]
-    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] CreateOrderVm vm)
+    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] CreateOrderVM vm)
     {
         try
         {

@@ -1,4 +1,5 @@
 using ConvenienceStore.Features.OrderItems.Contracts;
+using ConvenienceStore.Features.OrderItems.MapProfiles;
 using ConvenienceStore.Features.OrderItems.Repos;
 using ConvenienceStore.Features.OrderItems.Services;
 using ConvenienceStore.Features.OrderItems.Validators;
@@ -13,6 +14,8 @@ public static class OrderItemDI
         services.AddScoped<IOrderItemRepo, OrderItemRepo>();
         services.AddScoped<OrderItemValidator>();
 
+        services.AddAutoMapper(config => config.AddProfile<OrderItemMapProfile>());
+        
         return services;
     }
 }

@@ -4,9 +4,9 @@ namespace ConvenienceStore.Features.Orders.Contracts;
 
 public interface IOrderService
 {
-    Task<IList<OrderVm>> ListAsync();
-    Task<OrderVm?> FindAsync(Guid orderId);
-    Task<OrderVm> CreateAsync(CreateOrderVm vm);
-    Task<OrderVm> UpdateAsync(Guid id, CreateOrderVm vm);
+    Task<IList<OrderVM>> ListAsync();
+    Task<OrderVM?> FindAsync(Guid orderId);
+    Task<OrderVM> CreateAsync(CreateOrderVM vm);
+    Task<OrderVM> UpdateAsync(Guid id, CreateOrderVM vm);
     Task<bool> RemoveAsync(Guid id);
 }

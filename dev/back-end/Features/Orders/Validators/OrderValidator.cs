@@ -15,5 +15,9 @@ public class OrderValidator : AbstractValidator<Order>
         RuleFor(order => order.CustomerId)
             .NotEmpty()
             .WithMessage("O cliente precisa ser especificado");
+        
+        RuleFor(order => order.Items.Count)
+            .GreaterThan(0)
+            .WithMessage("Ao menos um item deve ser adicionado");
     }
 }

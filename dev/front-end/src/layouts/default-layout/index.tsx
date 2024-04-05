@@ -1,9 +1,8 @@
 import { Badge, Box, Container, Stack, Typography, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Link, Outlet } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { cartState } from "../../features/order-item/states/cart-state";
 import { IoIosCart } from "react-icons/io";
+import { useShoppingCart } from "../../features/order/hooks/use-shopping-cart";
 
 const BannerPrincipal = styled("img")({
     width: "100%",
@@ -24,7 +23,7 @@ const Mask = styled("div")({
 
 
 const DefaultLayout = () => {
-    const cart = useRecoilValue(cartState);
+    const cart = useShoppingCart();
     const { enqueueSnackbar } = useSnackbar();
 
     const showBuildProductsSnackBar = () => {
