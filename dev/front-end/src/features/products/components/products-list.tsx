@@ -6,13 +6,15 @@ import { ProductService } from "../services/product-service";
 interface ProductsListProps {
     selectedProduct: Product | undefined;
     setSelectedProduct: React.Dispatch<React.SetStateAction<Product | undefined>>;
+    setOpened: any;
 }
 
-const ProductsList = ({ selectedProduct, setSelectedProduct }: ProductsListProps) => {
+const ProductsList = ({ selectedProduct, setSelectedProduct, setOpened }: ProductsListProps) => {
     const [products, setProducts] = useState<Product[]>([]);
 
     const selectProduct = (product: Product) => {
         setSelectedProduct(product);
+        setOpened(true);
     }
 
     useEffect(() => {

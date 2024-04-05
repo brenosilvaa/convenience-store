@@ -37,7 +37,7 @@ const ProductsPage = () => {
             </Box>
 
             <Box sx={{ display: "flex", gap: 3 }}>
-                <ProductsList selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
+                <ProductsList selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} setOpened={setAddOpened} />
                 <ProductForm selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} opened={addOpened} setOpened={setAddOpened}/>
             </Box>
         </>
