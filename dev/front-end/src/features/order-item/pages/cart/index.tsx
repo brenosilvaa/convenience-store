@@ -3,7 +3,7 @@ import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, 
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "../../states/cart-state";
 import { CreateOrderItem } from "../../models/create-order-item";
-import { IoMdRemoveCircle, IoMdAddCircle } from "react-icons/io";
+import { IoMdRemove, IoMdAdd } from "react-icons/io";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 
 const CartPage = () => {
@@ -53,7 +53,7 @@ const CartPage = () => {
                                     cursor: "pointer"
                                 }}>
                                     <Typography onClick={() => removeOrderItemFromCart(index)} component={"span"} variant="caption" color={"red"}>
-                                        <IoMdRemoveCircle style={{ marginRight: 2 }} />Remover
+                                        <IoMdRemove style={{ marginRight: 2 }} />Remover
                                     </Typography>
                                 </Box>
                                 <Divider sx={{ marginBottom: "-2px" }} />
@@ -76,8 +76,8 @@ const CartPage = () => {
                                     <Box sx={{marginTop: 1}}>
                                         <Typography component="span" variant="caption">
                                             Quantidade - {item.quantity}
-                                            <Button onClick={() => increaseQuantity(index)}><IoMdAddCircle /></Button>
-                                            <Button onClick={() => decreaseQuantity(index)}><IoMdRemoveCircle /></Button>
+                                            <Button onClick={() => increaseQuantity(index)}><IoMdAdd /></Button>
+                                            <Button onClick={() => decreaseQuantity(index)}><IoMdRemove /></Button>
                                         </Typography>
                                     </Box>
                                     <Box sx={{marginTop: "-8px"}}>
