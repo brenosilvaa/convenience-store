@@ -1,8 +1,9 @@
+import React from "react";
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider } from "@mui/material";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "../../states/cart-state";
 import { CreateOrderItem } from "../../models/create-order-item";
-import { IoMdRemoveCircle } from "react-icons/io";
+import { IoMdRemoveCircle, IoMdAddCircle } from "react-icons/io";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 
 const CartPage = () => {
@@ -19,7 +20,21 @@ const CartPage = () => {
 
         setCart(cartList);
 
-        enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000, });
+        enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000 });
+    }
+
+    const increaseQuantity = (index: number) => {
+        let cartList: CreateOrderItem[] = [...cart];
+        cartList[index].quantity += 1;
+        setCart(cartList);
+    }
+
+    const decreaseQuantity = (index: number) => {
+        let cartList: CreateOrderItem[] = [...cart];
+        if (cartList[index].quantity > 1) {
+            cartList[index].quantity -= 1;
+            setCart(cartList);
+        }
     }
 
     return (
@@ -61,6 +76,8 @@ const CartPage = () => {
                                     <Box sx={{marginTop: 1}}>
                                         <Typography component="span" variant="caption">
                                             Quantidade - {item.quantity}
+                                            <Button onClick={() => increaseQuantity(index)}><IoMdAddCircle /></Button>
+                                            <Button onClick={() => decreaseQuantity(index)}><IoMdRemoveCircle /></Button>
                                         </Typography>
                                     </Box>
                                     <Box sx={{marginTop: "-8px"}}>
