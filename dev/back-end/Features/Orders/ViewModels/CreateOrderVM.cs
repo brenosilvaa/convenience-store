@@ -1,5 +1,4 @@
 ﻿using ConvenienceStore.Features.OrderItems.Models;
-using ConvenienceStore.Features.Users.Models;
 
 namespace ConvenienceStore.Features.Orders.ViewModels;
 

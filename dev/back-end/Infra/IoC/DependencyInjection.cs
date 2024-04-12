@@ -34,8 +34,8 @@ public static class DependencyInjection
 
         services.AddUserInfra()
                 .AddProductInfra()
-                .AddOrderItemInfra()
                 .AddOrderInfra()
+                .AddOrderItemInfra()
                 .AddKardexInfra();
 
         return services;

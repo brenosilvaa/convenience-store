@@ -1,6 +1,4 @@
 using AutoMapper;
-using ConvenienceStore.Features.OrderItems.Models;
-using ConvenienceStore.Features.OrderItems.ViewModels;
 using ConvenienceStore.Features.Orders.Models;
 using ConvenienceStore.Features.Orders.ViewModels;
 

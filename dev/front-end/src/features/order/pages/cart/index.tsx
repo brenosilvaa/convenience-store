@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider } from "@mui/material";
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "../../states/cart-state";
 import { CreateOrderItem } from "../../models/create-order-item";
@@ -10,6 +10,7 @@ import { IoMdCheckmarkCircle } from "react-icons/io";
 import { OrderService } from "../../services/order-service";
 import { CreateOrder } from "../../models/create-order";
 import { useState } from "react";
+import React from "react";
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +18,18 @@ const CartPage = () => {
     const cart = useRecoilValue(cartState);
     const setCart = useSetRecoilState(cartState);
     const { enqueueSnackbar } = useSnackbar();
+
+    const [dialogOpened, setDialogOpened] = useState<{ text: string; } | null>(null);
+
+    const openDialog = () => {
+        setDialogOpened({ text: "" });
+    };
+
+    const closeDialog = async (confirm: boolean | undefined) => {
+        if (confirm === true) confirmOrder();
+
+        setDialogOpened(null);
+    };
 
     const removeOrderItemFromCart = (index: number) => {
         let cartList: CreateOrderItem[] = [...cart];
@@ -49,10 +62,17 @@ const CartPage = () => {
     const confirmOrder = async () => {
         setIsLoading(true);
 
+        let totalValue = 0;
+
+        cart.forEach(item => {
+            totalValue += item.totalValue;
+        });
+
         const order: CreateOrder = {
-            customerId: "08dc452b-ebc9-4410-8eba-1600de6d7668",
-            sellerId: "08dc452b-ebc9-4410-8eba-1600de6d7668",
-            items: cart
+            customerId: "08dc49ce-c623-4f77-8586-d87048a08703",
+            sellerId: "08dc49ce-c623-4f77-8586-d87048a08703",
+            items: cart,
+            totalValue: totalValue
         };
 
         const orderCreated = await OrderService.instance.createAsync(order);
@@ -73,10 +93,39 @@ const CartPage = () => {
                 <PageTitle title={"Carrinho de compras"} />
 
                 {!!cart.length && (
-                    <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
+                    <Button disabled={isLoading} type="button" variant="contained" onClick={openDialog} sx={{ gap: 1 }}>
                         <IoMdCheckmarkCircle />Finalizar Compra
                     </Button>
+
                 )}
+
+                {/*  */}
+                <Dialog
+                    open={!!dialogOpened}
+                    onClose={() => closeDialog(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        Finalizar
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Deseja realmente finalizar seu pedido?
+                            <strong>{dialogOpened?.text}</strong>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => closeDialog(true)} autoFocus sx={{ mr: 1 }}>
+                            SIM
+                        </Button>
+                        <Button onClick={() => closeDialog(false)} color="error">
+                            NÃO
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                {/*  */}
+
             </Box>
 
 

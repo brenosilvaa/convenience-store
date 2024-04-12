@@ -1,5 +1,4 @@
 ﻿using ConvenienceStore.Features.Orders.Models;
-using ConvenienceStore.Features.Users.Models;
 using ConvenienceStore.Shared.Contracts;
 
 namespace ConvenienceStore.Features.Orders.Contracts;

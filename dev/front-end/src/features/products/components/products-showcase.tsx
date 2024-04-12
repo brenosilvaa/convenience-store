@@ -7,6 +7,7 @@ import { CreateOrderItem } from "../../order/models/create-order-item";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "../../order/states/cart-state";
 import { useSnackbar } from "notistack";
+import React from "react";
 
 const ProductsShowcase = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -50,6 +51,7 @@ const ProductsShowcase = () => {
             }
         ];
     }
+
 
     useEffect(() => {
         const fetchProducts = async () => {
