@@ -1,6 +1,4 @@
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cartState } from "../../states/cart-state";
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import { CreateOrderItem } from "../../models/create-order-item";
 import { IoMdRemove, IoMdAdd } from "react-icons/io";
 import { useSnackbar } from "notistack";
@@ -17,7 +15,8 @@ const CartPage = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const cart = useShoppingCart();
-    const setCart = useSetRecoilState(cartState);
+    const setCart = useSetShoppingCart();
+
     const { enqueueSnackbar } = useSnackbar();
 
     const [dialogOpened, setDialogOpened] = useState<{ text: string; } | null>(null);
@@ -44,10 +43,6 @@ const CartPage = () => {
         enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000 });
     }
 
-    const getTotalValueCart = () => {
-        return cart.reduce((total, item) => total + item.totalValue, 0)
-    }
-
     const increaseQuantity = (index: number) => {
         const cartList: CreateOrderItem[] = JSON.parse(JSON.stringify(cart));
 
@@ -69,17 +64,11 @@ const CartPage = () => {
     const confirmOrder = async () => {
         setIsLoading(true);
 
-        let totalValue = 0;
-
-        cart.forEach(item => {
-            totalValue += item.totalValue;
-        });
-
         const order: CreateOrder = {
-            customerId: "08dc49ce-c623-4f77-8586-d87048a08703",
-            sellerId: "08dc49ce-c623-4f77-8586-d87048a08703",
+            customerId: "08dc34a4-c04e-42c8-8e0e-2061918a4a11",
+            sellerId: "08dc34a4-c04e-42c8-8e0e-2061918a4a11",
             items: cart,
-            totalValue: cart.reduce((total, item) => total += item.totalValue, 0)
+            totalValue: getTotalValueCart()
         };
 
         const orderCreated = await OrderService.instance.createAsync(order);
@@ -231,22 +220,16 @@ const CartPage = () => {
                                 title={
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography variant="h5">Resumo</Typography>
-                                        
-                                        {!!cart.length && (
-                                            <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
-                                                <IoMdCheckmarkCircle />Finalizar Pedido
-                                            </Button>
-                                        )}
                                     </Box>
                                 }
-                                subheader={<Divider sx={{marginTop: 1}} />}
+                                subheader={<Divider sx={{ marginTop: 1 }} />}
                                 sx={{ backgroundColor: "background.paper" }}
                             />
 
                             <CardContent>
                                 <Box sx={{ overflowY: "auto", overflowX: "hidden", maxHeight: 250, height: 250, marginTop: "-10px" }}>
                                     {cart.map((item: CreateOrderItem) => (
-                                        <>
+                                        <React.Fragment key={item.productId}>
                                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                                 <Typography variant="caption">{item.quantity}x {item.product?.name}</Typography>
                                                 <Typography variant="caption">
@@ -254,7 +237,7 @@ const CartPage = () => {
                                                 </Typography>
                                             </Box>
                                             <Divider />
-                                        </>
+                                        </React.Fragment>
                                     ))}
                                 </Box>
                             </CardContent>

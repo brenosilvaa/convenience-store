@@ -1,7 +1,7 @@
 import { atom } from "recoil";
-import { CreateOrderItem } from "../models/create-order-item";
+import { CreateOrder } from "../models/create-order";
 
-export const cartState = atom<CreateOrderItem[]>({
+export const cartState = atom<CreateOrder | undefined>({
     key: 'cartState',
-    default: []
+    default: undefined
 });

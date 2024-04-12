@@ -3,56 +3,25 @@ import { Product } from "../models/product";
 import { useState, useEffect } from "react";
 import { ProductService } from "../services/product-service";
 import { IoMdCart } from "react-icons/io";
-import { CreateOrderItem } from "../../order/models/create-order-item";
-import { useSetRecoilState } from "recoil";
-import { cartState } from "../../order/states/cart-state";
 import { useSnackbar } from "notistack";
-import React from "react";
-import { useShoppingCart } from "../../order/hooks/use-shopping-cart";
+import { useAddToCart, useShoppingCart } from "../../order/hooks/use-shopping-cart";
 
 const ProductsShowcase = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [products, setProducts] = useState<Product[]>([]);
 
     const cart = useShoppingCart();
-    const setCart = useSetRecoilState(cartState);
-
+    const addToCart = useAddToCart();
     const { enqueueSnackbar } = useSnackbar();
 
-    const addToCart = (product: Product) => {
-        const item = cart.find(x => x.productId === product.id);
-
-        if (!item)
-            setCart(addProductToCart(product));
-        else
-            setCart(incrementQuantityToProductInsideCart(product, item));
-
-        enqueueSnackbar(`${product?.name} adicionado ao carrinho`, { variant: 'info', autoHideDuration: 3000 });
-    }
-
     const addProductToCart = (product: Product) => {
-        return [...cart, {
-            productId: product.id,
-            quantity: 1,
-            unitaryValue: product.value,
-            totalValue: product.value,
-            product: product
-        }];
-    }
+        const isSuccess = addToCart(product);
 
-    const incrementQuantityToProductInsideCart = (product: Product, item: CreateOrderItem) => {
-        return [
-            ...cart.filter(x => x.productId !== product.id),
-            {
-                productId: product.id,
-                quantity: item.quantity + 1,
-                unitaryValue: product.value,
-                totalValue: (item.quantity + 1) * product.value,
-                product: product
-            }
-        ];
+        if (isSuccess)
+            enqueueSnackbar(`${product?.name} adicionado ao carrinho`, { variant: 'info', autoHideDuration: 3000 });
+        else
+            enqueueSnackbar(`Não foi possível adicionar o produto ${product?.name} ao carrinho`, { variant: 'error', autoHideDuration: 3000 });
     }
-
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -96,7 +65,7 @@ const ProductsShowcase = () => {
                                     </Typography>
                                 </Box>
 
-                                <Button type="button" variant="contained" onClick={() => addToCart(product)} sx={{ gap: 1, mt: 1 }}>
+                                <Button type="button" variant="contained" onClick={() => addProductToCart(product)} sx={{ gap: 1, mt: 1 }}>
                                     <IoMdCart />Add ao carrinho
                                 </Button>
 
