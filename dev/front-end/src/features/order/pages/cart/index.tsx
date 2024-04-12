@@ -79,11 +79,11 @@ const CartPage = () => {
             <Box sx={{ display: "flex", gap: 3, justifyContent: "space-between", alignItems: "center" }}>
                 <PageTitle title={"Carrinho de compras"} />
 
-                {!!cart.length && (
+                {/* {!!cart.length && (
                     <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
                         <IoMdCheckmarkCircle />Finalizar Compra
                     </Button>
-                )}
+                )} */}
             </Box>
 
 
@@ -173,7 +173,21 @@ const CartPage = () => {
                     {/* Resumo pedido */}
                     <Grid item padding={2} xs={6} md={6} lg={6}>
                         <Card sx={{ height: 400, maxHeight: 400, position: "fixed", width: 530, border: 1, bgcolor: 'background.paper', borderColor: "grey.500" }}>
-                            <CardHeader title={"Pedido"} subheader={<Divider />} sx={{ backgroundColor: "background.paper" }} />
+                            <CardHeader
+                                title={
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Typography variant="h5">Resumo</Typography>
+                                        
+                                        {!!cart.length && (
+                                            <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
+                                                <IoMdCheckmarkCircle />Finalizar Pedido
+                                            </Button>
+                                        )}
+                                    </Box>
+                                }
+                                subheader={<Divider sx={{marginTop: 1}} />}
+                                sx={{ backgroundColor: "background.paper" }}
+                            />
 
                             <CardContent>
                                 <Box sx={{ overflowY: "auto", overflowX: "hidden", maxHeight: 250, height: 250, marginTop: "-10px" }}>
