@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import { ProductService } from "../services/product-service";
 import { IoMdCart } from "react-icons/io";
 import { CreateOrderItem } from "../../order/models/create-order-item";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { cartState } from "../../order/states/cart-state";
 import { useSnackbar } from "notistack";
+import { useShoppingCart } from "../../order/hooks/use-shopping-cart";
 
 const ProductsShowcase = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [products, setProducts] = useState<Product[]>([]);
 
-    const cart = useRecoilValue(cartState);
+    const cart = useShoppingCart();
     const setCart = useSetRecoilState(cartState);
 
     const { enqueueSnackbar } = useSnackbar();
