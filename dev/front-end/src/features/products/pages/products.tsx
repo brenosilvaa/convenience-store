@@ -5,6 +5,7 @@ import ProductForm from "../components/product-form";
 import ProductsList from "../components/products-list";
 import { Box, Button } from "@mui/material";
 import { IoMdAddCircle } from "react-icons/io";
+import React from "react";
 
 const ProductsPage = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();

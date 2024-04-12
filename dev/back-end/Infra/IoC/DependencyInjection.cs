@@ -1,11 +1,11 @@
 using ConvenienceStore.Features.OrderItems.IoC;
 using ConvenienceStore.Features.Products.IoC;
 using ConvenienceStore.Features.Orders.IoC;
-using ConvenienceStore.Features.Orders.IoC;
 using ConvenienceStore.Features.Users.IoC;
 using ConvenienceStore.Infra.Context;
 using ConvenienceStore.Shared.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using ConvenienceStore.Features.Kardexs.IoC;
 
 namespace ConvenienceStore.Infra.IoC;
 
@@ -34,8 +34,9 @@ public static class DependencyInjection
 
         services.AddUserInfra()
                 .AddProductInfra()
+                .AddOrderInfra()
                 .AddOrderItemInfra()
-                .AddOrderInfra();
+                .AddKardexInfra();
 
         return services;
     }

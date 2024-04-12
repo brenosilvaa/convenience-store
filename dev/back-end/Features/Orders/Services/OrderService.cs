@@ -2,7 +2,6 @@ using AutoMapper;
 
 using ConvenienceStore.Features.Orders.Contracts;
 using ConvenienceStore.Features.Orders.Models;
-using ConvenienceStore.Features.Orders.Repos;
 using ConvenienceStore.Features.Orders.Validators;
 using ConvenienceStore.Features.Orders.ViewModels;
 

@@ -7,6 +7,7 @@ import { CreateOrderItem } from "../../order/models/create-order-item";
 import { useSetRecoilState } from "recoil";
 import { cartState } from "../../order/states/cart-state";
 import { useSnackbar } from "notistack";
+import React from "react";
 import { useShoppingCart } from "../../order/hooks/use-shopping-cart";
 
 const ProductsShowcase = () => {
@@ -51,6 +52,7 @@ const ProductsShowcase = () => {
             }
         ];
     }
+
 
     useEffect(() => {
         const fetchProducts = async () => {

@@ -1,8 +1,9 @@
 ﻿using ConvenienceStore.Features.Products.Models;
+using ConvenienceStore.Shared.Contracts;
 
 namespace ConvenienceStore.Features.Kardexs.Models;
 
-public class Kardex
+public class Kardex : IBaseModel
 {
     #region Properties
 
