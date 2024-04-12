@@ -44,10 +44,15 @@ const CartPage = () => {
         enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000 });
     }
 
+    const getTotalValueCart = () => {
+        return cart.reduce((total, item) => total + item.totalValue, 0)
+    }
+
     const increaseQuantity = (index: number) => {
         const cartList: CreateOrderItem[] = JSON.parse(JSON.stringify(cart));
 
         cartList[index].quantity++;
+        cartList[index].totalValue = cartList[index].unitaryValue * cartList[index].quantity;
         setCart(cartList);
     }
 
@@ -56,6 +61,7 @@ const CartPage = () => {
 
         if (cartList[index].quantity > 1) {
             cartList[index].quantity -= 1;
+            cartList[index].totalValue = cartList[index].unitaryValue * cartList[index].quantity;
             setCart(cartList);
         }
     }
@@ -73,7 +79,7 @@ const CartPage = () => {
             customerId: "08dc49ce-c623-4f77-8586-d87048a08703",
             sellerId: "08dc49ce-c623-4f77-8586-d87048a08703",
             items: cart,
-            totalValue: totalValue
+            totalValue: cart.reduce((total, item) => total += item.totalValue, 0)
         };
 
         const orderCreated = await OrderService.instance.createAsync(order);
@@ -127,6 +133,11 @@ const CartPage = () => {
                 </Dialog>
                 {/*  */}
 
+                {/* {!!cart.length && (
+                    <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
+                        <IoMdCheckmarkCircle />Finalizar Compra
+                    </Button>
+                )} */}
             </Box>
 
 
@@ -144,70 +155,127 @@ const CartPage = () => {
                 </Box>
             )}
 
-            <List sx={{ width: 1, bgcolor: 'background.paper' }}>
-                {cart.map((item: CreateOrderItem, index: number) => (
-                    <ListItem key={item.productId} sx={{ marginBottom: 5, border: "1px solid #ccc" }}>
-                        <ListItemAvatar>
-                            <Avatar alt={item.product?.name} src={item.product?.image} />
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={
-                                <>
-                                    {item.product?.name}
-                                    <Box sx={{
-                                        marginTop: "-5px",
-                                        cursor: "pointer"
-                                    }}>
-                                        <Typography onClick={() => removeOrderItemFromCart(index)} component={"span"} variant="caption" color={"red"}>
-                                            <IoMdRemove style={{ marginRight: 2 }} />Remover
-                                        </Typography>
-                                    </Box>
-                                    <Divider sx={{ marginBottom: "-2px" }} />
-                                </>
+            {!!cart.length && (
+                <Grid container>
+                    <Grid item padding={2} xs={6} md={6} lg={6}>
+                        <List sx={{ width: 1, bgcolor: 'background.paper' }}>
+                            {cart.map((item: CreateOrderItem, index: number) => (
+                                <ListItem key={item.productId} sx={{ marginBottom: 5, border: "1px solid #ccc" }}>
+                                    <ListItemAvatar>
+                                        <Avatar alt={item.product?.name} src={item.product?.image} />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={
+                                            <>
+                                                {item.product?.name}
+                                                <Box sx={{
+                                                    marginTop: "-5px",
+                                                    cursor: "pointer"
+                                                }}>
+                                                    <Typography onClick={() => removeOrderItemFromCart(index)} component={"span"} variant="caption" color={"red"}>
+                                                        <IoMdRemove style={{ marginRight: 2 }} />Remover
+                                                    </Typography>
+                                                </Box>
+                                                <Divider sx={{ marginBottom: "-2px" }} />
+                                            </>
+                                        }
+                                        secondary={
+                                            <Box>
+                                                <Box sx={{ direction: "flex", justifyContent: "space-between" }}>
+                                                    <Typography component={"span"} variant="caption" sx={{
+                                                        textAlign: "justify",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                        display: "-webkit-box",
+                                                        WebkitLineClamp: "3",
+                                                        WebkitBoxOrient: "vertical",
+                                                        lineHeight: "1.2rem"
+                                                    }}>
+                                                        {` - ${item.product?.description}`}
+                                                    </Typography>
+                                                    <Box sx={{ marginTop: 1 }}>
+                                                        <Typography component="span" variant="caption" gap={2}>
+                                                            <Button onClick={() => decreaseQuantity(index)}><IoMdRemove /></Button>
+                                                            {item.quantity}
+                                                            <Button onClick={() => increaseQuantity(index)}><IoMdAdd /></Button>
+                                                        </Typography>
+                                                    </Box>
+                                                    <Box sx={{ marginTop: "-8px" }}>
+                                                        <Typography component="span" variant="caption">
+                                                            Valor unitário: {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.unitaryValue ?? 0)}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Typography
+                                                        component="span"
+                                                        variant="body1"
+                                                        color="green"
+                                                        sx={{ fontWeight: "bold" }}
+                                                    >
+                                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format((item.product?.value ?? 0) * item.quantity)}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        }
+                                        secondaryTypographyProps={{ component: "div" }}
+                                    />
+                                </ListItem>
+                            ))
                             }
-                            secondary={
-                                <Box>
-                                    <Box sx={{ direction: "flex", justifyContent: "space-between" }}>
-                                        <Typography component={"span"} variant="caption" sx={{
-                                            textAlign: "justify",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                            display: "-webkit-box",
-                                            WebkitLineClamp: "3",
-                                            WebkitBoxOrient: "vertical",
-                                            lineHeight: "1.2rem"
-                                        }}>
-                                            {` - ${item.product?.description}`}
-                                        </Typography>
-                                        <Box sx={{ marginTop: 1 }}>
-                                            <Typography component="span" variant="caption" gap={2}>
-                                                <Button onClick={() => decreaseQuantity(index)}><IoMdRemove /></Button>
-                                                {item.quantity}
-                                                <Button onClick={() => increaseQuantity(index)}><IoMdAdd /></Button>
-                                            </Typography>
-                                        </Box>
-                                        <Box sx={{ marginTop: "-8px" }}>
-                                            <Typography component="span" variant="caption">
-                                                Valor unitário: {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.unitaryValue ?? 0)}
-                                            </Typography>
-                                        </Box>
-                                        <Typography
-                                            component="span"
-                                            variant="body1"
-                                            color="green"
-                                            sx={{ fontWeight: "bold" }}
-                                        >
-                                            {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format((item.product?.value ?? 0) * item.quantity)}
-                                        </Typography>
+                        </List>
+                    </Grid>
+
+                    {/* Resumo pedido */}
+                    <Grid item padding={2} xs={6} md={6} lg={6}>
+                        <Card sx={{ height: 400, maxHeight: 400, position: "fixed", width: 530, border: 1, bgcolor: 'background.paper', borderColor: "grey.500" }}>
+                            <CardHeader
+                                title={
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Typography variant="h5">Resumo</Typography>
+                                        
+                                        {!!cart.length && (
+                                            <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
+                                                <IoMdCheckmarkCircle />Finalizar Pedido
+                                            </Button>
+                                        )}
                                     </Box>
+                                }
+                                subheader={<Divider sx={{marginTop: 1}} />}
+                                sx={{ backgroundColor: "background.paper" }}
+                            />
+
+                            <CardContent>
+                                <Box sx={{ overflowY: "auto", overflowX: "hidden", maxHeight: 250, height: 250, marginTop: "-10px" }}>
+                                    {cart.map((item: CreateOrderItem) => (
+                                        <>
+                                            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                                <Typography variant="caption">{item.quantity}x {item.product?.name}</Typography>
+                                                <Typography variant="caption">
+                                                    + {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.totalValue)}
+                                                </Typography>
+                                            </Box>
+                                            <Divider />
+                                        </>
+                                    ))}
                                 </Box>
-                            }
-                            secondaryTypographyProps={{ component: "div" }}
-                        />
-                    </ListItem>
-                ))
-                }
-            </List>
+                            </CardContent>
+
+                            <CardActions>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", paddingLeft: 1, width: "100%", alignItems: "center" }}>
+                                    <Typography variant="h5">Total</Typography>
+                                    <Typography
+                                        component="span"
+                                        variant="body1"
+                                        color="green"
+                                        sx={{ fontWeight: "bold" }}
+                                    >
+                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(getTotalValueCart())}
+                                    </Typography>
+                                </Box>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                </Grid>
+            )}
         </>
     );
 }
