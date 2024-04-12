@@ -56,6 +56,8 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
             setValue("userId", selectedProduct.userId);
             setValue("image", selectedProduct.image);
             setValue("value", selectedProduct.value);
+
+            setImageUrl(selectedProduct.image ?? '');
         }
     }, [selectedProduct]);
 
@@ -67,8 +69,8 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
             onClose={() => setOpened(false)}
             ModalProps={{ keepMounted: true }}
         >
-            <Box style={{ display: "flex" }} sx={{ width: 380, p: 2, height: 1 }}>
-                <Stack component={"form"} onSubmit={handleSubmit(save)} gap={3} sx={{ maxWidth: 400, mt: 5 }}>
+            <Box style={{ display: "flex" }} sx={{ width: 380, mr: 3, ml: 1, height: 1 }}>
+                <Stack component={"form"} onSubmit={handleSubmit(save)} gap={3} sx={{ maxWidth: 400 }}>
                     <Box>
                         <Tooltip title="Limpar campos">
                             <IconButton onClick={() => reset()} color="warning" sx={{ backgroundColor: "warning" }}>
@@ -76,7 +78,7 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
                             </IconButton>
                         </Tooltip>
                     </Box>
-                    <TextField 
+                    <TextField
                         {...register("name", {
                             required: "O campo é obrigatório.",
                             minLength: { value: 3, message: "O campo nome deve possuir ao menos 3 caracteres." }
@@ -89,7 +91,7 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
                         InputLabelProps={{
                             shrink: true
                         }}
-                        sx={{marginTop: "-16px"}}
+                        sx={{ marginTop: "-16px" }}
                     />
 
                     <TextField
@@ -146,11 +148,11 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
 
 
             {imageUrl && (
-                <Box style={{ marginLeft: "20px" }}>
-                    <Typography variant="h6" sx={{ mt: 1 }}>
+                <Box style={{ marginLeft: "20px", marginBottom: "10px"}}>
+                    <Typography variant="h6">
                         Pré-Visualização
                     </Typography>
-                    <Box style={{ maxWidth: "300px", maxHeight: "165px", overflow: "hidden", border: "1px solid #ccc" }}>
+                    <Box style={{ maxWidth: "300px", maxHeight: "165px", overflow: "hidden", border: "1px solid #ccc"    }}>
                         <img src={imageUrl} alt="Imagem Renderizada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </Box>
                 </Box>
