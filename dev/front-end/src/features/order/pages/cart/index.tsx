@@ -10,11 +10,12 @@ import { IoMdCheckmarkCircle } from "react-icons/io";
 import { OrderService } from "../../services/order-service";
 import { CreateOrder } from "../../models/create-order";
 import { useState } from "react";
+import { useShoppingCart } from "../../hooks/use-shopping-cart";
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const cart = useRecoilValue(cartState);
+    const cart = useShoppingCart();
     const setCart = useSetRecoilState(cartState);
     const { enqueueSnackbar } = useSnackbar();
 
