@@ -24,13 +24,13 @@ const Mask = styled("div")({
 
 const DefaultLayout = () => {
     const cart = useShoppingCart();
+    const cartIsEmpty = !cart;
+
     const { enqueueSnackbar } = useSnackbar();
 
     const showBuildProductsSnackBar = () => {
         enqueueSnackbar('Adicione alguns itens ao seu carrinho !', { variant: 'info', autoHideDuration: 3000, });
     }
-
-    const cartIsEmpty = cart.length === 0;
 
     return (
         <>
@@ -62,7 +62,7 @@ const DefaultLayout = () => {
                         </Link>
 
                         <Link onClick={cartIsEmpty ? showBuildProductsSnackBar : () => { }} to={cartIsEmpty ? "/" : "/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
-                            <Badge showZero={true} badgeContent={cartIsEmpty ? 0 : cart.length} color="primary">
+                            <Badge showZero={true} badgeContent={cartIsEmpty ? 0 : cart.items.length} color="primary">
                                 <IoIosCart size="25" color="white" />
                             </Badge>
                         </Link>

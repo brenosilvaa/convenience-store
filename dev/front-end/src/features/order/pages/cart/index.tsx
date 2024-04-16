@@ -6,16 +6,18 @@ import PageTitle from "../../../../shared/components/page-title";
 import { Link } from "react-router-dom";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { OrderService } from "../../services/order-service";
-import { CreateOrder } from "../../models/create-order";
 import { useState } from "react";
 import React from "react";
-import { useShoppingCart } from "../../hooks/use-shopping-cart";
+import { useDecreaseQuantity, useIncreaseQuantity, useRemoveFromCart, useResetCart, useShoppingCart } from "../../hooks/use-shopping-cart";
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const cart = useShoppingCart();
-    const setCart = useSetShoppingCart();
+    const removeFromCart = useRemoveFromCart();
+    const increaseQuantity = useIncreaseQuantity();
+    const decreaseQuantity = useDecreaseQuantity();
+    const resetCart = useResetCart();
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -32,51 +34,19 @@ const CartPage = () => {
     };
 
     const removeOrderItemFromCart = (index: number) => {
-        let cartList: CreateOrderItem[] = [...cart];
-
-        const item = cartList[index];
-
-        cartList.splice(index, 1);
-
-        setCart(cartList);
-
+        const item = removeFromCart(index);
         enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000 });
-    }
-
-    const increaseQuantity = (index: number) => {
-        const cartList: CreateOrderItem[] = JSON.parse(JSON.stringify(cart));
-
-        cartList[index].quantity++;
-        cartList[index].totalValue = cartList[index].unitaryValue * cartList[index].quantity;
-        setCart(cartList);
-    }
-
-    const decreaseQuantity = (index: number) => {
-        const cartList: CreateOrderItem[] = JSON.parse(JSON.stringify(cart));
-
-        if (cartList[index].quantity > 1) {
-            cartList[index].quantity -= 1;
-            cartList[index].totalValue = cartList[index].unitaryValue * cartList[index].quantity;
-            setCart(cartList);
-        }
     }
 
     const confirmOrder = async () => {
         setIsLoading(true);
 
-        const order: CreateOrder = {
-            customerId: "08dc34a4-c04e-42c8-8e0e-2061918a4a11",
-            sellerId: "08dc34a4-c04e-42c8-8e0e-2061918a4a11",
-            items: cart,
-            totalValue: getTotalValueCart()
-        };
-
-        const orderCreated = await OrderService.instance.createAsync(order);
+        const orderCreated = await OrderService.instance.createAsync(cart!);
 
         setIsLoading(false);
 
         if (orderCreated) {
-            setCart([]);
+            resetCart();
             enqueueSnackbar(`Pedido realizado com sucesso.`, { variant: 'success', autoHideDuration: 3000 });
         }
         else
@@ -88,11 +58,10 @@ const CartPage = () => {
             <Box sx={{ display: "flex", gap: 3, justifyContent: "space-between", alignItems: "center" }}>
                 <PageTitle title={"Carrinho de compras"} />
 
-                {!!cart.length && (
+                {!!cart && (
                     <Button disabled={isLoading} type="button" variant="contained" onClick={openDialog} sx={{ gap: 1 }}>
                         <IoMdCheckmarkCircle />Finalizar Compra
                     </Button>
-
                 )}
 
                 {/*  */}
@@ -130,7 +99,7 @@ const CartPage = () => {
             </Box>
 
 
-            {!cart.length && (
+            {!cart && (
                 <Box sx={{ py: 10, textAlign: "center" }}>
                     <Typography>
                         :( Seu carrinho ainda está vazio.
@@ -144,11 +113,11 @@ const CartPage = () => {
                 </Box>
             )}
 
-            {!!cart.length && (
+            {!!cart && (
                 <Grid container>
                     <Grid item padding={2} xs={6} md={6} lg={6}>
                         <List sx={{ width: 1, bgcolor: 'background.paper' }}>
-                            {cart.map((item: CreateOrderItem, index: number) => (
+                            {cart.items.map((item: CreateOrderItem, index: number) => (
                                 <ListItem key={item.productId} sx={{ marginBottom: 5, border: "1px solid #ccc" }}>
                                     <ListItemAvatar>
                                         <Avatar alt={item.product?.name} src={item.product?.image} />
@@ -228,7 +197,7 @@ const CartPage = () => {
 
                             <CardContent>
                                 <Box sx={{ overflowY: "auto", overflowX: "hidden", maxHeight: 250, height: 250, marginTop: "-10px" }}>
-                                    {cart.map((item: CreateOrderItem) => (
+                                    {cart.items.map((item: CreateOrderItem) => (
                                         <React.Fragment key={item.productId}>
                                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                                 <Typography variant="caption">{item.quantity}x {item.product?.name}</Typography>
@@ -251,7 +220,7 @@ const CartPage = () => {
                                         color="green"
                                         sx={{ fontWeight: "bold" }}
                                     >
-                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(getTotalValueCart())}
+                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cart.totalValue)}
                                     </Typography>
                                 </Box>
                             </CardActions>

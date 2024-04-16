@@ -1,4 +1,4 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { cartState } from "../states/cart-state";
 import { CreateOrderItem } from "../models/create-order-item";
 import { Product } from "../../products/models/product";
@@ -7,10 +7,6 @@ import { CreateOrder } from "../models/create-order";
 const useShoppingCart = () => {
     return useRecoilValue(cartState);
 };
-
-const getTotalValueCart = (cart: CreateOrder) => {
-    return cart.items.reduce((total, item) => total + item.totalValue, 0)
-}
 
 const useAddToCart = () => {
     let cart = useShoppingCart();
@@ -40,22 +36,90 @@ const useAddToCart = () => {
     }
 }
 
+const useRemoveFromCart = () => {
+    const cart = useShoppingCart();
+    const setCart = useSetRecoilState(cartState);
+
+    return (index: number): CreateOrderItem => {
+        const unlinkedCart: CreateOrder = getCartUnlinked(cart!);
+
+        let cartList: CreateOrderItem[] = [...cart!.items];
+
+        const item = cartList[index];
+
+        cartList.splice(index, 1);
+        unlinkedCart!.items = cartList;
+
+        setCart(unlinkedCart);
+
+        return item;
+    }
+}
+
+const useResetCart = () => {
+    const resetCart = useResetRecoilState(cartState);
+
+    return () => {
+        resetCart();
+    }
+}
+
+const useIncreaseQuantity = () => {
+    const cart = useShoppingCart();
+    const setCart = useSetRecoilState(cartState);
+
+    return (index: number) => {
+        const unlinkedCart: CreateOrder = getCartUnlinked(cart!);
+
+        unlinkedCart.items[index].quantity++;
+        unlinkedCart.items[index].totalValue = unlinkedCart.items[index].unitaryValue * unlinkedCart.items[index].quantity;
+
+        unlinkedCart!.items = unlinkedCart.items;
+        setCart(unlinkedCart);
+    }
+}
+
+const useDecreaseQuantity = () => {
+    const cart = useShoppingCart();
+    const setCart = useSetRecoilState(cartState);
+
+    return (index: number) => {
+        const unlinkedCart: CreateOrder = getCartUnlinked(cart!);
+
+        if (unlinkedCart.items[index].quantity > 1) {
+            unlinkedCart.items[index].quantity -= 1;
+            unlinkedCart.items[index].totalValue = unlinkedCart.items[index].unitaryValue * unlinkedCart.items[index].quantity;
+
+            unlinkedCart!.items = unlinkedCart.items;
+            setCart(unlinkedCart);
+        }
+    }
+}
+
+const getTotalValueCart = (cart: CreateOrder) => {
+    return cart.items.reduce((total, item) => total + item.totalValue, 0)
+}
+
 const addProductToCart = (cart: CreateOrder, product: Product) => {
-    cart.items = [...cart.items, {
+    const unlinkedCart: CreateOrder = getCartUnlinked(cart);
+
+    unlinkedCart.items = [...unlinkedCart.items, {
         productId: product.id,
         quantity: 1,
         unitaryValue: product.value,
         totalValue: product.value,
         product: product
     }];
-    cart.totalValue = getTotalValueCart(cart);
+    unlinkedCart.totalValue = getTotalValueCart(unlinkedCart);
 
-    return cart;
+    return unlinkedCart;
 }
 
 const incrementQuantityToProductInsideCart = (cart: CreateOrder, product: Product, item: CreateOrderItem) => {
-    cart.items = [
-        ...cart.items.filter(x => x.productId !== product.id),
+    const unlinkedCart: CreateOrder = getCartUnlinked(cart);
+
+    unlinkedCart.items = [
+        ...unlinkedCart.items.filter(x => x.productId !== product.id),
         {
             productId: product.id,
             quantity: item.quantity + 1,
@@ -64,9 +128,11 @@ const incrementQuantityToProductInsideCart = (cart: CreateOrder, product: Produc
             product: product
         }
     ];
-    cart.totalValue = getTotalValueCart(cart);
+    unlinkedCart.totalValue = getTotalValueCart(unlinkedCart);
 
-    return cart;
+    return unlinkedCart;
 }
 
-export { useShoppingCart, useAddToCart };
+const getCartUnlinked = (cart: CreateOrder) => JSON.parse(JSON.stringify(cart));
+
+export { useShoppingCart, useAddToCart, useRemoveFromCart, useIncreaseQuantity, useDecreaseQuantity, useResetCart };
