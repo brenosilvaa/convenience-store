@@ -60,6 +60,12 @@ const DefaultLayout = () => {
                                 Produtos
                             </Typography>
                         </Link>
+                        •
+                        <Link to={"/pedidos"} style={{ textDecorationColor: "white" }}>
+                            <Typography component={"span"} sx={{ color: "white" }}>
+                                Pedidos
+                            </Typography>
+                        </Link>
 
                         <Link onClick={cartIsEmpty ? showBuildProductsSnackBar : () => { }} to={cartIsEmpty ? "/" : "/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
                             <Badge showZero={true} badgeContent={cartIsEmpty ? 0 : cart.length} color="primary">

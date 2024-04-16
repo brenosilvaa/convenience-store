@@ -9,7 +9,11 @@ namespace ConvenienceStore.Features.Orders.Repos;
 public class OrderRepo(DataContext context) : BaseRepo<Order>(context), IOrderRepo
 {
     public override async Task<IList<Order>> ListAsync()
-        => await DbSet.OrderBy(order => order.Date).ToListAsync();
+        => await DbSet.OrderBy(order => order.Date)
+                      .Include(x => x.Items)
+                      .ThenInclude(y => y.Product)
+                      .Include(x => x.Seller)
+                      .ToListAsync();
     public async Task<IList<Order>> ListNotCanceledAsync() 
         => await DbSet.Where(x => !x.IsCancelled).OrderBy(order => order.Date).ToListAsync();
     public async Task<IList<Order>> ListCanceledAsync() 

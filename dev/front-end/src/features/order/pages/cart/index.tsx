@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "../../states/cart-state";
 import { CreateOrderItem } from "../../models/create-order-item";
@@ -99,14 +99,13 @@ const CartPage = () => {
             <Box sx={{ display: "flex", gap: 3, justifyContent: "space-between", alignItems: "center" }}>
                 <PageTitle title={"Carrinho de compras"} />
 
-                {!!cart.length && (
+                {/* {!!cart.length && (
                     <Button disabled={isLoading} type="button" variant="contained" onClick={openDialog} sx={{ gap: 1 }}>
                         <IoMdCheckmarkCircle />Finalizar Compra
                     </Button>
 
-                )}
+                )} */}
 
-                {/*  */}
                 <Dialog
                     open={!!dialogOpened}
                     onClose={() => closeDialog(false)}
@@ -233,7 +232,7 @@ const CartPage = () => {
                                         <Typography variant="h5">Resumo</Typography>
                                         
                                         {!!cart.length && (
-                                            <Button disabled={isLoading} type="button" variant="contained" onClick={confirmOrder} sx={{ gap: 1 }}>
+                                            <Button disabled={isLoading} type="button" variant="contained" onClick={openDialog} sx={{ gap: 1 }}>
                                                 <IoMdCheckmarkCircle />Finalizar Pedido
                                             </Button>
                                         )}

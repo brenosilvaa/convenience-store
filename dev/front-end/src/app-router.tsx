@@ -7,6 +7,8 @@ import SignUpPage from "./features/users/pages/sign-up";
 import ProductsPage from "./features/products/pages/products";
 import { SnackbarProvider } from "notistack";
 import CartPage from "./features/order/pages/cart";
+import OrderList from "./features/order/pages/list";
+import OrderDetails from "./features/order/pages/details";
 
 const AppRouter = () => {
     return (
@@ -19,6 +21,8 @@ const AppRouter = () => {
                         <Route path="cadastro" element={<SignUpPage />} />
                         <Route path="produtos" element={<ProductsPage />} />
                         <Route path="carrinho" element={<CartPage />} />
+                        <Route path="pedidos" element={<OrderList />} />
+                        <Route path="pedidos/details/:id" element={<OrderDetails />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Route>
                 </Routes>
