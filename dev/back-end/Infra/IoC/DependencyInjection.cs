@@ -6,6 +6,8 @@ using ConvenienceStore.Infra.Context;
 using ConvenienceStore.Shared.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using ConvenienceStore.Features.Kardexs.IoC;
+using ConvenienceStore.Features.Users.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ConvenienceStore.Infra.IoC;
 
@@ -24,6 +26,17 @@ public static class DependencyInjection
         var connectionString = $"server={dbHost};port={dbPort};userid={dbUser};pwd={dbPassword};database={dbDatabase};default command timeout=0;";
 
         services.AddDbContext<DataContext>(options => { options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); });
+
+        #endregion
+
+        #region IdentityServer
+
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<DataContext>()
+            .AddDefaultTokenProviders();
 
         #endregion
 

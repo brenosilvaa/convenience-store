@@ -1,6 +1,7 @@
 using ConvenienceStore.Features.Users.Contracts;
 using ConvenienceStore.Features.Users.ViewModels;
 using ConvenienceStore.Shared.Utils;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvenienceStore.Features.Users.Controllers;
@@ -87,4 +88,8 @@ public class UsersController(IUserService service) : ControllerBase
     [ProducesResponseType<ErrorResult>(404)]
     public async Task<IActionResult> RemoveAsync(Guid id)
         => Ok(await service.RemoveAsync(id));
+
+    [HttpPost("login")]
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request) 
+        => Ok(await service.LoginAsync(request));
 }

@@ -12,6 +12,7 @@ import { useDecreaseQuantity, useIncreaseQuantity, useRemoveFromCart, useResetCa
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [dialogOpened, setDialogOpened] = useState<{ text: string; } | null>(null);
 
     const cart = useShoppingCart();
     const removeFromCart = useRemoveFromCart();
@@ -20,8 +21,6 @@ const CartPage = () => {
     const resetCart = useResetCart();
 
     const { enqueueSnackbar } = useSnackbar();
-
-    const [dialogOpened, setDialogOpened] = useState<{ text: string; } | null>(null);
 
     const openDialog = () => {
         setDialogOpened({ text: "" });

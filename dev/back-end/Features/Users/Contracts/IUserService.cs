@@ -1,4 +1,5 @@
 using ConvenienceStore.Features.Users.ViewModels;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace ConvenienceStore.Features.Users.Contracts;
 
@@ -11,4 +12,5 @@ public interface IUserService
     Task<UserVM> AddAsync(CreateUserVM vm);
     Task<UserVM> UpdateAsync(Guid id, UpdateUserVM vm);
     Task<bool> RemoveAsync(Guid id);
+    Task<UserVM> LoginAsync(LoginRequest request);
 }
