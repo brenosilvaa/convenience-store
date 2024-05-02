@@ -1,6 +1,8 @@
 using AutoMapper;
+using ConvenienceStore.Features.Pixes.ValueObjects;
 using ConvenienceStore.Features.Users.Contracts;
 using ConvenienceStore.Features.Users.Models;
+using ConvenienceStore.Features.Users.Security;
 using ConvenienceStore.Features.Users.Validators;
 using ConvenienceStore.Features.Users.ViewModels;
 using ConvenienceStore.Shared.Exceptions;
@@ -48,7 +50,9 @@ public class UserService(IMapper mapper, IUserRepo repo, UserValidator userValid
         var result = await userManager.CreateAsync(user, vm.Password);
 
         if (!result.Succeeded)
-            throw new Exception(string.Join("; ", result.Errors));
+            throw new Exception(string.Join("; ", result.Errors.Select(x => x.Description)));
+
+        await userManager.AddToRoleAsync(user, UserRoles.Customer);
 
         return mapper.Map<UserVM>(user);
     }
@@ -56,22 +60,22 @@ public class UserService(IMapper mapper, IUserRepo repo, UserValidator userValid
     public async Task<UserVM> UpdateAsync(Guid id, UpdateUserVM vm)
     {
         var user = await _FindAsync(id);
-        
+
         user.Update(vm.Name, vm.Email);
         await userValidator.ValidateAndThrowAsync(user);
 
         var result = await userManager.UpdateAsync(user);
-        
+
         if (!result.Succeeded)
-            throw new Exception(string.Join("; ", result.Errors));
-        
+            throw new Exception(string.Join("; ", result.Errors.Select(x => x.Description)));
+
         return mapper.Map<UserVM>(user);
     }
 
     public async Task<bool> RemoveAsync(Guid id)
     {
         var user = await _FindAsync(id);
-        
+
         var success = repo.Remove(user);
 
         if (success) await repo.Commit();
@@ -79,7 +83,7 @@ public class UserService(IMapper mapper, IUserRepo repo, UserValidator userValid
         return success;
     }
 
-    public async Task<UserVM> LoginAsync(LoginRequest request)
+    public async Task<LoggedUserVM> LoginAsync(LoginRequest request)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
 
@@ -87,12 +91,40 @@ public class UserService(IMapper mapper, IUserRepo repo, UserValidator userValid
             throw new Exception("Usuário ou senha inválidos");
 
         var result = await signInManager.PasswordSignInAsync(user, request.Password, false, false);
-        
-        if(!result.Succeeded)
+
+        if (!result.Succeeded)
             throw new Exception("Usuário ou senha inválidos");
 
-        
-        
-        return mapper.Map<UserVM>(user);
+        var roles = await userManager.GetRolesAsync(user) ?? [];
+
+        var (token, validTo) = user.GenerateToken(roles);
+
+        var loggedUser = mapper.Map<LoggedUserVM>(user);
+
+        loggedUser.Token = token;
+        loggedUser.TokenValidity = validTo;
+
+        return loggedUser;
+    }
+
+    public async Task<bool> TurnToSellerAsync(Guid id, Pix pix) 
+    {
+        var user = await _FindAsync(id);
+
+        if (user.IsSeller)
+            return true;
+
+        user.TurnIntoSeller(pix);
+
+        await userValidator.ValidateAndThrowAsync(user);
+
+        var result = await userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            throw new Exception(string.Join("; ", result.Errors.Select(x => x.Description)));
+
+        await userManager.AddToRoleAsync(user, UserRoles.Seller);
+
+        return true;
     }
 }

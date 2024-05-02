@@ -1,3 +1,4 @@
+using ConvenienceStore.Features.Pixes.ValueObjects;
 using ConvenienceStore.Features.Users.ViewModels;
 using Microsoft.AspNetCore.Identity.Data;
 
@@ -12,5 +13,6 @@ public interface IUserService
     Task<UserVM> AddAsync(CreateUserVM vm);
     Task<UserVM> UpdateAsync(Guid id, UpdateUserVM vm);
     Task<bool> RemoveAsync(Guid id);
-    Task<UserVM> LoginAsync(LoginRequest request);
+    Task<LoggedUserVM> LoginAsync(LoginRequest request);
+    Task<bool> TurnToSellerAsync(Guid id, Pix pix);
 }

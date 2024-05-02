@@ -46,7 +46,7 @@ public class User : IdentityUser<Guid>, IBaseModel
         Pix = pix;
     }
 
-    public string GenerateToken()
+    public (string, DateTime) GenerateToken(IList<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(UserTokenOptions.IssuerSigningKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -56,7 +56,10 @@ public class User : IdentityUser<Guid>, IBaseModel
             new(ClaimTypes.NameIdentifier, Id.ToString()),
             new (ClaimTypes.Email, Email)
         ];
-        
+
+        foreach (var role in roles)
+            claims.Add(new Claim(ClaimTypes.Role, role));
+
         var token = new JwtSecurityToken(
             issuer: UserTokenOptions.ValidIssuer,
             audience: UserTokenOptions.ValidAudience,
@@ -65,7 +68,9 @@ public class User : IdentityUser<Guid>, IBaseModel
             expires: DateTime.UtcNow.AddMinutes(60 * 8),
             signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return (jwtToken, token.ValidTo);
     }
 
     public override string ToString() => $"Id: {Id} | Email: {Email}";
