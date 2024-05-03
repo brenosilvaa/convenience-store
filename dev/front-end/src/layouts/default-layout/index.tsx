@@ -1,8 +1,11 @@
-import { Badge, Box, Container, Stack, Typography, styled } from "@mui/material";
+import { Badge, Box, Button, Container, Stack, Typography, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Link, Outlet } from "react-router-dom";
 import { IoIosCart } from "react-icons/io";
 import { useShoppingCart } from "../../features/order/hooks/use-shopping-cart";
+import { UserService } from "../../features/users/services/user-service";
+import { LoggedUser } from "../../features/users/models/logged-user";
+import { PixKeyType } from "../../features/users/enums/pix-key-type";
 
 const BannerPrincipal = styled("img")({
     width: "100%",
@@ -29,7 +32,32 @@ const DefaultLayout = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const showBuildProductsSnackBar = () => {
-        enqueueSnackbar('Adicione alguns itens ao seu carrinho !', { variant: 'info', autoHideDuration: 3000, });
+        enqueueSnackbar('Adicione alguns itens ao seu carrinho!', { variant: 'info', autoHideDuration: 3000, });
+    }
+
+    const login = async () => {
+        const result = await UserService.instance.loginAsync({
+            email: "leo4@teste.com",
+            password: "Conv@123"
+        });
+
+        localStorage.setItem("conv_user", JSON.stringify(result));
+
+        enqueueSnackbar('Bem-vindo!', { variant: 'success', autoHideDuration: 3000, });
+    }
+
+    const turnToSeller = async () => {
+        const userStorage = localStorage.getItem("conv_user");
+        const user: LoggedUser | null = !!userStorage ? JSON.parse(userStorage) : null;
+
+        if (!user)
+            enqueueSnackbar("Usuário não está logado");
+        else {
+            await UserService.instance.turnToSellerAsync(user.id, {
+                type: PixKeyType.Cpf,
+                key: "00000000000"
+            });
+        }
     }
 
     return (
@@ -40,7 +68,11 @@ const DefaultLayout = () => {
                 <Mask />
 
                 <Box sx={{ position: "absolute", width: "calc(100% - 48px)", p: 3, bottom: 0, left: 0, color: "white" }}>
-                    <Typography component="h1" variant="h4">Loja de Conveniência</Typography>
+                    <Typography component="h1" variant="h4">
+                        Loja de Conveniência
+                        <Button variant="contained" onClick={() => login()}>login</Button>
+                        <Button variant="contained" color="error" onClick={() => turnToSeller()}>vender</Button>
+                    </Typography>
 
                     <Stack direction={"row"} gap={1} alignItems={"center"} sx={{ width: 1 }}>
                         <Link to={"/"} style={{ textDecorationColor: "white" }}>

@@ -1,6 +1,8 @@
 ﻿using ConvenienceStore.Features.Products.Contracts;
 using ConvenienceStore.Features.Products.ViewModels;
+using ConvenienceStore.Features.Users.Security;
 using ConvenienceStore.Shared.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvenienceStore.Features.Products.Controllers
@@ -23,12 +25,14 @@ namespace ConvenienceStore.Features.Products.Controllers
             => Ok(await service.FindAsync(id));
 
         [HttpPost]
+        [Authorize(Roles = UserRoles.Seller)]
         [ProducesResponseType<ProductVM>(200)]
         [ProducesResponseType<ErrorResult>(400)]
         public async Task<IActionResult> AddAsync([FromBody] CreateProductVM vm)
             => Ok(await service.AddAsync(vm));
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = UserRoles.Seller)]
         [ProducesResponseType<ProductVM>(200)]
         [ProducesResponseType<ErrorResult>(400)]
         [ProducesResponseType<ErrorResult>(404)]
@@ -36,6 +40,7 @@ namespace ConvenienceStore.Features.Products.Controllers
             => Ok(await service.UpdateAsync(id, vm));
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = UserRoles.Seller)]
         [ProducesResponseType<bool>(200)]
         [ProducesResponseType<ErrorResult>(400)]
         [ProducesResponseType<ErrorResult>(404)]

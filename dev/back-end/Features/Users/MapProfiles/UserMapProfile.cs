@@ -6,5 +6,9 @@ namespace ConvenienceStore.Features.Users.MapProfiles;
 
 public class UserMapProfile : Profile
 {
-    public UserMapProfile() => CreateMap<User, UserVM>();
+    public UserMapProfile()
+    {
+        CreateMap<User, UserVM>();
+        CreateMap<User, LoggedUserVM>();
+    }
 }
