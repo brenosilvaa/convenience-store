@@ -63,7 +63,6 @@ const CartPage = () => {
                     </Button>
                 )}
 
-                {/*  */}
                 <Dialog
                     open={!!dialogOpened}
                     onClose={() => closeDialog(false)}

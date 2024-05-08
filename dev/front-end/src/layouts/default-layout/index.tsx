@@ -6,6 +6,8 @@ import { useShoppingCart } from "../../features/order/hooks/use-shopping-cart";
 import { UserService } from "../../features/users/services/user-service";
 import { LoggedUser } from "../../features/users/models/logged-user";
 import { PixKeyType } from "../../features/users/enums/pix-key-type";
+import { useState } from "react";
+import { User } from "../../features/users/models/user";
 
 const BannerPrincipal = styled("img")({
     width: "100%",
@@ -26,6 +28,8 @@ const Mask = styled("div")({
 
 
 const DefaultLayout = () => {
+    const [userLogged, setUserLogged] = useState<User>();
+
     const cart = useShoppingCart();
     const cartIsEmpty = !cart;
 
@@ -35,6 +39,13 @@ const DefaultLayout = () => {
         enqueueSnackbar('Adicione alguns itens ao seu carrinho!', { variant: 'info', autoHideDuration: 3000, });
     }
 
+    const logout = async () => {
+        localStorage.removeItem("conv_user");
+
+        setUserLogged(undefined);
+        enqueueSnackbar('Deslogado com sucesso', { variant: 'success', autoHideDuration: 3000, });
+    }
+
     const login = async () => {
         const result = await UserService.instance.loginAsync({
             email: "teste@teste.com",
@@ -42,6 +53,8 @@ const DefaultLayout = () => {
         });
 
         localStorage.setItem("conv_user", JSON.stringify(result));
+
+        setUserLogged(result);
 
         enqueueSnackbar('Bem-vindo!', { variant: 'success', autoHideDuration: 3000, });
     }
@@ -70,8 +83,11 @@ const DefaultLayout = () => {
                 <Box sx={{ position: "absolute", width: "calc(100% - 48px)", p: 3, bottom: 0, left: 0, color: "white" }}>
                     <Typography component="h1" variant="h4">
                         Loja de Conveniência
-                        <Button variant="contained" onClick={() => login()}>login</Button>
-                        <Button variant="contained" color="error" onClick={() => turnToSeller()}>vender</Button>
+                        {!userLogged && (
+                            <>
+                                <Button variant="contained" color="error" onClick={() => turnToSeller()}>vender</Button>
+                            </>
+                        )}
                     </Typography>
 
                     <Stack direction={"row"} gap={1} alignItems={"center"} sx={{ width: 1 }}>
@@ -92,18 +108,44 @@ const DefaultLayout = () => {
                                 Produtos
                             </Typography>
                         </Link>
+                        •
+                        <Link to={"/pedidos"} style={{ textDecorationColor: "white" }}>
+                            <Typography component={"span"} sx={{ color: "white" }}>
+                                Pedidos
+                            </Typography>
+                        </Link>
 
                         <Link onClick={cartIsEmpty ? showBuildProductsSnackBar : () => { }} to={cartIsEmpty ? "/" : "/carrinho"} style={{ textDecorationColor: "white", marginLeft: "auto" }}>
                             <Badge showZero={true} badgeContent={cartIsEmpty ? 0 : cart.items.length} color="primary">
                                 <IoIosCart size="25" color="white" />
                             </Badge>
                         </Link>
-                        •
-                        <Link to={"/cadastro"} style={{ textDecorationColor: "white" }}>
-                            <Typography component={"span"} sx={{ color: "white" }}>
-                                Cadastre-se
-                            </Typography>
-                        </Link>
+                        {!userLogged && (
+                            <>
+                                •
+                                <Link to={"/cadastro"} style={{ textDecorationColor: "transparent" }}>
+                                    <Typography component={"span"} sx={{ color: "white" }}>
+                                        Cadastre-se
+                                    </Typography>
+                                </Link>
+                                •
+                                <Typography onClick={login} component={"span"} sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }}>
+                                    Login
+                                </Typography>
+                            </>
+                        )}
+                        {!!userLogged && (
+                            <>
+                                •
+                                <Typography component={"span"} sx={{ color: "white" }}>
+                                    {userLogged.name}
+                                </Typography>
+                                -
+                                <Typography onClick={logout} component={"span"} sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }}>
+                                    Sair
+                                </Typography>
+                            </>
+                        )}
                     </Stack>
                 </Box>
             </Container>
