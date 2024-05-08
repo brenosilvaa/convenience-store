@@ -49,7 +49,7 @@ public class Order : IBaseModel
         => IsCancelled = true;
 
     public override string ToString()
-        => $"Id: {Id} | Total Pedido: {TotalValue} | Vendedor: {Seller?.Name}";
+        => $"Id: {Id} | Total Pedido: {TotalValue} | Vendedor: {Seller?.UserName}";
 
     #endregion
 }

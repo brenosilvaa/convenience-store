@@ -1,6 +1,4 @@
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Typography, Button, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Card, CardActions, CardContent, CardHeader } from "@mui/material";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cartState } from "../../states/cart-state";
 import { CreateOrderItem } from "../../models/create-order-item";
 import { IoMdRemove, IoMdAdd } from "react-icons/io";
 import { useSnackbar } from "notistack";
@@ -8,19 +6,21 @@ import PageTitle from "../../../../shared/components/page-title";
 import { Link } from "react-router-dom";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { OrderService } from "../../services/order-service";
-import { CreateOrder } from "../../models/create-order";
 import { useState } from "react";
 import React from "react";
-import { useShoppingCart } from "../../hooks/use-shopping-cart";
+import { useDecreaseQuantity, useIncreaseQuantity, useRemoveFromCart, useResetCart, useShoppingCart } from "../../hooks/use-shopping-cart";
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [dialogOpened, setDialogOpened] = useState<{ text: string; } | null>(null);
 
     const cart = useShoppingCart();
-    const setCart = useSetRecoilState(cartState);
-    const { enqueueSnackbar } = useSnackbar();
+    const removeFromCart = useRemoveFromCart();
+    const increaseQuantity = useIncreaseQuantity();
+    const decreaseQuantity = useDecreaseQuantity();
+    const resetCart = useResetCart();
 
-    const [dialogOpened, setDialogOpened] = useState<{ text: string; } | null>(null);
+    const { enqueueSnackbar } = useSnackbar();
 
     const openDialog = () => {
         setDialogOpened({ text: "" });
@@ -33,61 +33,19 @@ const CartPage = () => {
     };
 
     const removeOrderItemFromCart = (index: number) => {
-        let cartList: CreateOrderItem[] = [...cart];
-
-        const item = cartList[index];
-
-        cartList.splice(index, 1);
-
-        setCart(cartList);
-
+        const item = removeFromCart(index);
         enqueueSnackbar(`${item.product?.name} removido com sucesso`, { variant: 'success', autoHideDuration: 3000 });
-    }
-
-    const getTotalValueCart = () => {
-        return cart.reduce((total, item) => total + item.totalValue, 0)
-    }
-
-    const increaseQuantity = (index: number) => {
-        const cartList: CreateOrderItem[] = JSON.parse(JSON.stringify(cart));
-
-        cartList[index].quantity++;
-        cartList[index].totalValue = cartList[index].unitaryValue * cartList[index].quantity;
-        setCart(cartList);
-    }
-
-    const decreaseQuantity = (index: number) => {
-        const cartList: CreateOrderItem[] = JSON.parse(JSON.stringify(cart));
-
-        if (cartList[index].quantity > 1) {
-            cartList[index].quantity -= 1;
-            cartList[index].totalValue = cartList[index].unitaryValue * cartList[index].quantity;
-            setCart(cartList);
-        }
     }
 
     const confirmOrder = async () => {
         setIsLoading(true);
 
-        let totalValue = 0;
-
-        cart.forEach(item => {
-            totalValue += item.totalValue;
-        });
-
-        const order: CreateOrder = {
-            customerId: "08dc49ce-c623-4f77-8586-d87048a08703",
-            sellerId: "08dc49ce-c623-4f77-8586-d87048a08703",
-            items: cart,
-            totalValue: cart.reduce((total, item) => total += item.totalValue, 0)
-        };
-
-        const orderCreated = await OrderService.instance.createAsync(order);
+        const orderCreated = await OrderService.instance.createAsync(cart!);
 
         setIsLoading(false);
 
         if (orderCreated) {
-            setCart([]);
+            resetCart();
             enqueueSnackbar(`Pedido realizado com sucesso.`, { variant: 'success', autoHideDuration: 3000 });
         }
         else
@@ -99,12 +57,11 @@ const CartPage = () => {
             <Box sx={{ display: "flex", gap: 3, justifyContent: "space-between", alignItems: "center" }}>
                 <PageTitle title={"Carrinho de compras"} />
 
-                {/* {!!cart.length && (
+                {!!cart && (
                     <Button disabled={isLoading} type="button" variant="contained" onClick={openDialog} sx={{ gap: 1 }}>
                         <IoMdCheckmarkCircle />Finalizar Compra
                     </Button>
-
-                )} */}
+                )}
 
                 <Dialog
                     open={!!dialogOpened}
@@ -140,7 +97,7 @@ const CartPage = () => {
             </Box>
 
 
-            {!cart.length && (
+            {!cart && (
                 <Box sx={{ py: 10, textAlign: "center" }}>
                     <Typography>
                         :( Seu carrinho ainda está vazio.
@@ -154,11 +111,11 @@ const CartPage = () => {
                 </Box>
             )}
 
-            {!!cart.length && (
+            {!!cart && (
                 <Grid container>
                     <Grid item padding={2} xs={6} md={6} lg={6}>
                         <List sx={{ width: 1, bgcolor: 'background.paper' }}>
-                            {cart.map((item: CreateOrderItem, index: number) => (
+                            {cart.items.map((item: CreateOrderItem, index: number) => (
                                 <ListItem key={item.productId} sx={{ marginBottom: 5, border: "1px solid #ccc" }}>
                                     <ListItemAvatar>
                                         <Avatar alt={item.product?.name} src={item.product?.image} />
@@ -230,22 +187,16 @@ const CartPage = () => {
                                 title={
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography variant="h5">Resumo</Typography>
-                                        
-                                        {!!cart.length && (
-                                            <Button disabled={isLoading} type="button" variant="contained" onClick={openDialog} sx={{ gap: 1 }}>
-                                                <IoMdCheckmarkCircle />Finalizar Pedido
-                                            </Button>
-                                        )}
                                     </Box>
                                 }
-                                subheader={<Divider sx={{marginTop: 1}} />}
+                                subheader={<Divider sx={{ marginTop: 1 }} />}
                                 sx={{ backgroundColor: "background.paper" }}
                             />
 
                             <CardContent>
                                 <Box sx={{ overflowY: "auto", overflowX: "hidden", maxHeight: 250, height: 250, marginTop: "-10px" }}>
-                                    {cart.map((item: CreateOrderItem) => (
-                                        <>
+                                    {cart.items.map((item: CreateOrderItem) => (
+                                        <React.Fragment key={item.productId}>
                                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                                 <Typography variant="caption">{item.quantity}x {item.product?.name}</Typography>
                                                 <Typography variant="caption">
@@ -253,7 +204,7 @@ const CartPage = () => {
                                                 </Typography>
                                             </Box>
                                             <Divider />
-                                        </>
+                                        </React.Fragment>
                                     ))}
                                 </Box>
                             </CardContent>
@@ -267,7 +218,7 @@ const CartPage = () => {
                                         color="green"
                                         sx={{ fontWeight: "bold" }}
                                     >
-                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(getTotalValueCart())}
+                                        {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cart.totalValue)}
                                     </Typography>
                                 </Box>
                             </CardActions>

@@ -1,6 +1,10 @@
+using ConvenienceStore.Features.Pixes.ValueObjects;
 using ConvenienceStore.Features.Users.Contracts;
+using ConvenienceStore.Features.Users.Security;
 using ConvenienceStore.Features.Users.ViewModels;
 using ConvenienceStore.Shared.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvenienceStore.Features.Users.Controllers;
@@ -51,7 +55,7 @@ public class UsersController(IUserService service) : ControllerBase
     [ProducesResponseType<ErrorResult>(404)]
     public async Task<IActionResult> FindAsync(Guid id)
         => Ok(await service.FindAsync(id));
-    
+
     /// <summary>
     /// Adiciona um novo usuário ao banco de dados 
     /// </summary>
@@ -87,4 +91,13 @@ public class UsersController(IUserService service) : ControllerBase
     [ProducesResponseType<ErrorResult>(404)]
     public async Task<IActionResult> RemoveAsync(Guid id)
         => Ok(await service.RemoveAsync(id));
+
+    [HttpPost("login")]
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
+        => Ok(await service.LoginAsync(request));
+
+    [HttpPatch("{id}/turnToSeller")]
+    [Authorize(Roles = UserRoles.Customer)]
+    public async Task<IActionResult> TurnToSellerAsync(Guid id, [FromBody] Pix pix)
+        => Ok(await service.TurnToSellerAsync(id, pix));
 }

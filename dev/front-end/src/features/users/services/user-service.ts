@@ -1,7 +1,10 @@
 import { HttpStatusCode } from "axios";
-import { CreateUser } from "../models/create-user";
-import { User } from "../models/user";
 import HttpClient from "../../../http/http-client";
+import { CreateUser } from "../models/create-user";
+import { LoggedUser } from "../models/logged-user";
+import { Login } from "../models/login";
+import { User } from "../models/user";
+import { Pix } from "../models/pix";
 
 export class UserService {
     private static _instance?: UserService;
@@ -21,5 +24,19 @@ export class UserService {
 
         // if (response.status === HttpStatusCode.Ok) return response.data;
         // else throw new Error(response.data?.detail ?? response.data);
+    }
+
+    async loginAsync(login: Login): Promise<LoggedUser> {
+        const response = await HttpClient.instance.post(`/users/login`, login);
+
+        if (response.status === HttpStatusCode.Ok) return response.data;
+        else throw new Error(response.data?.detail ?? response.data);
+    }
+
+    async turnToSellerAsync(id: string, pix: Pix): Promise<boolean> {
+        const response = await HttpClient.instance.patch(`/users/${id}/turnToSeller`, pix);
+
+        if (response.status === HttpStatusCode.Ok) return response.data;
+        else throw new Error(response.data?.detail ?? response.data);
     }
 }

@@ -10,7 +10,7 @@ public class UserValidator : AbstractValidator<User>
 {
     public UserValidator()
     {
-        RuleFor(user => user.Name)
+        RuleFor(user => user.UserName)
             .NotEmpty()
             .MinimumLength(3)
             .WithMessage("O campo Nome deve conter ao menos 3 caracteres.");
@@ -19,10 +19,6 @@ public class UserValidator : AbstractValidator<User>
             .Matches(RegexPatterns.Email)
             .WithMessage("O campo E-mail deve ser válido.");
         
-        RuleFor(user => user.Password)
-            .NotEmpty()
-            .WithMessage("O campo Senha é obrigatório.");
-
         When(user => user.IsSeller, () =>
         {
             RuleFor(user => user.Pix).SetValidator(new PixValidator()!);
