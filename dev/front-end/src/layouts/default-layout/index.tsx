@@ -37,8 +37,8 @@ const DefaultLayout = () => {
 
     const login = async () => {
         const result = await UserService.instance.loginAsync({
-            email: "leo4@teste.com",
-            password: "Conv@123"
+            email: "teste@teste.com",
+            password: "Onsoft@2019#Apps"
         });
 
         localStorage.setItem("conv_user", JSON.stringify(result));

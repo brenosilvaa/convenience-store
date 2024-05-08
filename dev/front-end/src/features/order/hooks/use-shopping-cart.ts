@@ -3,6 +3,7 @@ import { cartState } from "../states/cart-state";
 import { CreateOrderItem } from "../models/create-order-item";
 import { Product } from "../../products/models/product";
 import { CreateOrder } from "../models/create-order";
+import { LoggedUser } from "../../users/models/logged-user";
 
 const useShoppingCart = () => {
     return useRecoilValue(cartState);
@@ -14,13 +15,20 @@ const useAddToCart = () => {
 
     return (product: Product): boolean => {
         try {
-            if (cart === undefined)
+            if (cart === undefined) {
+                // Recuperar o user do localStorage
+                const userStorage = localStorage.getItem("conv_user");
+                const user: LoggedUser | null = !!userStorage ? JSON.parse(userStorage) : null;
+                // Definir o valor do campo userId no formulário
                 cart = {
-                    customerId: "08dc34a4-c04e-42c8-8e0e-2061918a4a11",
-                    sellerId: "08dc34a4-c04e-42c8-8e0e-2061918a4a11",
+                    customerId: user?.id ?? "",
+                    sellerId: "08dc6f7c-1111-47e3-8095-be99f06ce7e8",
                     items: [],
                     totalValue: 0
                 }
+                console.log(cart);
+
+            }
 
             const item = cart?.items.find(x => x.productId === product.id);
 
@@ -75,6 +83,8 @@ const useIncreaseQuantity = () => {
         unlinkedCart.items[index].totalValue = unlinkedCart.items[index].unitaryValue * unlinkedCart.items[index].quantity;
 
         unlinkedCart!.items = unlinkedCart.items;
+        unlinkedCart.totalValue = getTotalValueCart(unlinkedCart);
+
         setCart(unlinkedCart);
     }
 }
@@ -91,6 +101,8 @@ const useDecreaseQuantity = () => {
             unlinkedCart.items[index].totalValue = unlinkedCart.items[index].unitaryValue * unlinkedCart.items[index].quantity;
 
             unlinkedCart!.items = unlinkedCart.items;
+            unlinkedCart.totalValue = getTotalValueCart(unlinkedCart);
+
             setCart(unlinkedCart);
         }
     }
@@ -129,6 +141,9 @@ const incrementQuantityToProductInsideCart = (cart: CreateOrder, product: Produc
         }
     ];
     unlinkedCart.totalValue = getTotalValueCart(unlinkedCart);
+
+    console.log(unlinkedCart);
+
 
     return unlinkedCart;
 }
