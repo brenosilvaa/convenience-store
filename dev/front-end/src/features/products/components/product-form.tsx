@@ -6,13 +6,13 @@ import { IoMdCheckmarkCircleOutline, IoIosRefresh } from "react-icons/io";
 import { CreateProduct } from "../models/create-product";
 import { Product } from "../models/product";
 import { ProductService } from "../services/product-service";
+import { LoggedUser } from "../../users/models/logged-user";
 
 interface ProductFormProps {
     selectedProduct: Product | undefined;
     setSelectedProduct: React.Dispatch<React.SetStateAction<Product | undefined>>;
     opened: boolean;
     setOpened: any;
-
 }
 
 const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }: ProductFormProps) => {
@@ -25,7 +25,7 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
     };
 
     const handleSucces = () => {
-        enqueueSnackbar('Salvo com succeso!', { variant: 'success', autoHideDuration: 3000 });
+        enqueueSnackbar('Salvo com sucesso!', { variant: 'success', autoHideDuration: 3000 });
     };
 
     const handleError = () => {
@@ -53,14 +53,18 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
         if (!!selectedProduct) {
             setValue("name", selectedProduct.name);
             setValue("description", selectedProduct.description);
-            setValue("userId", selectedProduct.userId);
             setValue("image", selectedProduct.image);
             setValue("value", selectedProduct.value);
+
+            // Recuperar o user do localStorage
+            const userStorage = localStorage.getItem("conv_user");
+            const user: LoggedUser | null = !!userStorage ? JSON.parse(userStorage) : null;
+            // Definir o valor do campo userId no formulário
+            setValue("userId", user?.id || '');
 
             setImageUrl(selectedProduct.image ?? '');
         }
     }, [selectedProduct]);
-
 
     return (
         <Drawer
@@ -92,17 +96,6 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
                             shrink: true
                         }}
                         sx={{ marginTop: "-16px" }}
-                    />
-
-                    <TextField
-                        {...register("userId", { required: "O campo é obrigatório." })}
-                        type="text"
-                        label="Usuário"
-                        variant="outlined"
-                        size="small"
-                        InputLabelProps={{
-                            shrink: true
-                        }}
                     />
 
                     <TextField
@@ -148,11 +141,11 @@ const ProductForm = ({ selectedProduct, setSelectedProduct, opened, setOpened }:
 
 
             {imageUrl && (
-                <Box style={{ marginLeft: "20px", marginBottom: "10px"}}>
+                <Box style={{ marginLeft: "20px", marginBottom: "10px" }}>
                     <Typography variant="h6">
                         Pré-Visualização
                     </Typography>
-                    <Box style={{ maxWidth: "300px", maxHeight: "165px", overflow: "hidden", border: "1px solid #ccc"    }}>
+                    <Box style={{ maxWidth: "300px", maxHeight: "165px", overflow: "hidden", border: "1px solid #ccc" }}>
                         <img src={imageUrl} alt="Imagem Renderizada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </Box>
                 </Box>
