@@ -1,12 +1,11 @@
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import { IoMdAddCircle } from "react-icons/io";
 import PageTitle from "../../../shared/components/page-title";
-import { Product } from "../models/product";
+import withUser from "../../../shared/hocs/withUser";
 import ProductForm from "../components/product-form";
 import ProductsList from "../components/products-list";
-import { Box, Button } from "@mui/material";
-import { IoMdAddCircle } from "react-icons/io";
-import React from "react";
-import withUser from "../../../shared/hocs/withUser";
+import { Product } from "../models/product";
 
 const ProductsPage = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();

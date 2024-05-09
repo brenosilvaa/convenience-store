@@ -9,7 +9,7 @@ const useLoggedInUser = () => {
 const useSetLoggedInUser = () => {
     const setValue = useSetRecoilState(loggedInUserState);
 
-    return (user: User) => {
+    return (user: User | null) => {
         setValue(user);
     }
 }

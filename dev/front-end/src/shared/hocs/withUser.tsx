@@ -8,29 +8,34 @@ const withUser = (WrappedComponent: any, restrict: "seller" | "customer" | null 
         const user = useLoggedInUser();
         const setUser = useSetLoggedInUser();
 
-        const userId = "08dc6ae0-d6e4-455f-887a-e2a7817e8137"; // Customer 
-        // const userId = "08dc6ae8-0e60-42f6-8c01-8276611d0db1"; // Seller 
+        const userStr = localStorage.getItem("conv_user");
+        const loggedUser = !!userStr ? JSON.parse(userStr) : null;
+        const userId = loggedUser?.id ?? "";
 
         useEffect(() => {
             const fetchUser = async () => {
                 setUser(await UserService.instance.findAsync(userId));
             }
 
-            if (!user)
+            if (!user && !!userStr)
                 fetchUser();
         }, [user]);
 
         const moreProps = { ...props, user };
 
-        if (!user)
-            return "Carregando...";
+        if (!!userStr) {
+            if (!user)
+                return "Carregando...";
 
-        if (!!restrict) {
-            if (user.isSeller && restrict === "customer")
-                return (<Forbidden />);
+            if (!!restrict) {
+                if (user.isSeller && restrict === "customer")
+                    return (<Forbidden />);
 
-            if (!user.isSeller && restrict === "seller")
-                return (<Forbidden />);
+                if (!user.isSeller && restrict === "seller")
+                    return (<Forbidden />);
+            }
+        } else if (!!restrict) {
+            return (<Forbidden />);
         }
 
         return (<WrappedComponent {...moreProps} />);
