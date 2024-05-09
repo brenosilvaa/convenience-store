@@ -129,9 +129,11 @@ const DefaultLayout = () => {
                                     </Typography>
                                 </Link>
                                 •
-                                <Typography onClick={login} component={"span"} sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }}>
-                                    Login
-                                </Typography>
+                                <Link to={"/login"} style={{ textDecorationColor: "transparent" }}>
+                                    <Typography onClick={login} component={"span"} sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }}>
+                                        Login
+                                    </Typography>
+                                </Link>
                             </>
                         )}
                         {!!userLogged && (
