@@ -26,6 +26,13 @@ export class UserService {
         // else throw new Error(response.data?.detail ?? response.data);
     }
 
+    async findAsync(id: string): Promise<User> {
+        const response = await HttpClient.instance.get(`/users/${id}`);
+
+        if (response.status === HttpStatusCode.Ok) return response.data;
+        else throw new Error(response.data?.detail ?? response.data);
+    }
+
     async loginAsync(login: Login): Promise<LoggedUser> {
         const response = await HttpClient.instance.post(`/users/login`, login);
 

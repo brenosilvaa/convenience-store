@@ -6,6 +6,7 @@ import ProductsList from "../components/products-list";
 import { Box, Button } from "@mui/material";
 import { IoMdAddCircle } from "react-icons/io";
 import React from "react";
+import withUser from "../../../shared/hocs/withUser";
 
 const ProductsPage = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
@@ -45,4 +46,4 @@ const ProductsPage = () => {
     );
 };
 
-export default ProductsPage;
+export default withUser(ProductsPage, "seller");
