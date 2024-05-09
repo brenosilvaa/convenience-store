@@ -9,6 +9,7 @@ import { SnackbarProvider } from "notistack";
 import CartPage from "./features/order/pages/cart";
 import OrderList from "./features/order/pages/list";
 import OrderDetails from "./features/order/pages/details";
+import LoginPage from "./features/users/pages/login";
 
 const AppRouter = () => {
     return (
@@ -19,6 +20,7 @@ const AppRouter = () => {
                         <Route path="" element={<HomePage />} />
                         <Route path="sobre" element={<AboutPage />} />
                         <Route path="cadastro" element={<SignUpPage />} />
+                        <Route path="login" element={<LoginPage />} />
                         <Route path="produtos" element={<ProductsPage />} />
                         <Route path="carrinho" element={<CartPage />} />
                         <Route path="pedidos" element={<OrderList />} />
