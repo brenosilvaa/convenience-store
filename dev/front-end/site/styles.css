@@ -1,0 +1,35 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    border: none;
+    height: 100%;
+}
+
+/* Obtendo a referência por Classe */
+.grid-container {
+    width: 100%;
+    height: calc(100% - 144px);
+    display: grid;
+    margin: 16px 0;
+    gap: 16px;
+    grid-template:
+        "side content"
+        / 240px 1fr;
+}
+
+/* Obtendo a referência por Tag */
+aside {
+    grid-area: side;
+}
+
+/* Obtendo a referência por Id */
+#principal {
+    grid-area: content;
+    overflow-y: auto;
+}
+
+article.card img {
+    height: 240px;
+    object-fit: cover;
+}
