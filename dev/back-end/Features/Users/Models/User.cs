@@ -20,6 +20,7 @@ public class User : IdentityUser<Guid>, IBaseModel
     public IList<Product> Products { get; private set; } = [];
     public IList<Order> SaleOrders { get; private set; } = [];
     public IList<Order> ShoppingOrders { get; private set; } = [];
+    public string Name => UserName ?? string.Empty;
 
     #endregion
 

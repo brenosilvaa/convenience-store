@@ -1,12 +1,13 @@
 import { Badge, Box, Button, Container, Stack, Typography, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { Link, Outlet } from "react-router-dom";
 import { IoIosCart } from "react-icons/io";
+import { Link, Outlet } from "react-router-dom";
 import { useShoppingCart } from "../../features/order/hooks/use-shopping-cart";
-import { UserService } from "../../features/users/services/user-service";
-import { LoggedUser } from "../../features/users/models/logged-user";
 import { PixKeyType } from "../../features/users/enums/pix-key-type";
-import { useState } from "react";
+import { useLoggedInUser } from "../../features/users/hooks/use-logged-in-user";
+import { useSetLoggedInUser } from "../../features/users/hooks/use-logged-in-user";
+import { LoggedUser } from "../../features/users/models/logged-user";
+import { UserService } from "../../features/users/services/user-service";
 import { User } from "../../features/users/models/user";
 
 const BannerPrincipal = styled("img")({
@@ -28,7 +29,8 @@ const Mask = styled("div")({
 
 
 const DefaultLayout = () => {
-    const [userLogged, setUserLogged] = useState<User>();
+    const userLogged = useLoggedInUser();
+    const setUserLogged = useSetLoggedInUser();
 
     const cart = useShoppingCart();
     const cartIsEmpty = !cart;
@@ -42,21 +44,8 @@ const DefaultLayout = () => {
     const logout = async () => {
         localStorage.removeItem("conv_user");
 
-        setUserLogged(undefined);
+        setUserLogged(null);
         enqueueSnackbar('Deslogado com sucesso', { variant: 'success', autoHideDuration: 3000, });
-    }
-
-    const login = async () => {
-        const result = await UserService.instance.loginAsync({
-            email: "teste@teste.com",
-            password: "Teste@1"
-        });
-
-        localStorage.setItem("conv_user", JSON.stringify(result));
-
-        setUserLogged(result);
-
-        enqueueSnackbar('Bem-vindo!', { variant: 'success', autoHideDuration: 3000, });
     }
 
     const turnToSeller = async () => {
@@ -66,10 +55,16 @@ const DefaultLayout = () => {
         if (!user)
             enqueueSnackbar("Usuário não está logado");
         else {
-            await UserService.instance.turnToSellerAsync(user.id, {
+            const result = await UserService.instance.turnToSellerAsync(user.id, {
                 type: PixKeyType.Cpf,
                 key: "00000000000"
             });
+
+            if (!!result) {
+                const seller = { ...userLogged };
+                seller.isSeller = true;
+                setUserLogged(seller as User);
+            }
         }
     }
 
@@ -83,10 +78,8 @@ const DefaultLayout = () => {
                 <Box sx={{ position: "absolute", width: "calc(100% - 48px)", p: 3, bottom: 0, left: 0, color: "white" }}>
                     <Typography component="h1" variant="h4">
                         Loja de Conveniência
-                        {!userLogged && (
-                            <>
-                                <Button variant="contained" color="error" onClick={() => turnToSeller()}>vender</Button>
-                            </>
+                        {!!userLogged && !userLogged.isSeller && (
+                            <Button variant="contained" color="error" onClick={() => turnToSeller()}>vender</Button>
                         )}
                     </Typography>
 
@@ -130,7 +123,7 @@ const DefaultLayout = () => {
                                 </Link>
                                 •
                                 <Link to={"/login"} style={{ textDecorationColor: "transparent" }}>
-                                    <Typography onClick={login} component={"span"} sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }}>
+                                    <Typography component={"span"} sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }}>
                                         Login
                                     </Typography>
                                 </Link>
