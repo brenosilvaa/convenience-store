@@ -3,16 +3,36 @@ import { IoIosEye, IoIosEyeOff, IoMdCheckmarkCircleOutline } from "react-icons/i
 import PageTitle from "../../../shared/components/page-title";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
+import { Login } from "../models/login";
+import { UserService } from "../services/user-service";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
+import { useSetLoggedInUser } from "../hooks/use-logged-in-user";
 
 
 const LoginPage = () => {
-
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit } = useForm<Login>();
 
-    const save = async () => {
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+    const setUser = useSetLoggedInUser();
 
-        console.log('fez login!');
+    const login: SubmitHandler<Login> = async (login: Login) => {
+        try {
+            const result = await UserService.instance.loginAsync(login);
+
+            localStorage.setItem("conv_user", JSON.stringify(result));
+
+            enqueueSnackbar('Bem-vindo!', { variant: 'success', autoHideDuration: 3000, });
+
+            setUser(result);
+
+            navigate("/");
+        }
+        catch (error: any) {
+            enqueueSnackbar(error, { variant: 'error' });
+        }
     }
 
     return (
@@ -22,7 +42,7 @@ const LoginPage = () => {
                 caption={"Faça login no sistema e começa a vender seus produtos!"}
             />
 
-            <Stack component={"form"}  gap={3} sx={{ maxWidth: 400, mt: 5 }}>
+            <Stack component="form" gap={3} sx={{ maxWidth: 400, mt: 5 }} onSubmit={handleSubmit(login)}>
 
 
                 <TextField
@@ -51,7 +71,7 @@ const LoginPage = () => {
                     }}
                 />
 
-                <Button onSubmit={handleSubmit(save)} type="submit" variant="contained" sx={{ mx: 16, mt: 1, gap: 1 }}>
+                <Button type="submit" variant="contained" sx={{ mx: 16, mt: 1, gap: 1 }}>
                     <IoMdCheckmarkCircleOutline />Entrar
                 </Button>
 
